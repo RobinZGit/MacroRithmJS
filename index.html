@@ -2,543 +2,73 @@
   <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
 
-	<title>������ �� ������ � �� ������ (��������� ������)</title>
-<script>
+	<title>Calendar</title>
+  <script>
 
-
-//111##################################################################################
-//###################� ������� �����Ņ #############################################
-//##################################################################################
-
-//������� �������� ����������, ����������� ��� ������ ���. � �.�. ��� ����� ������� ����� ������� ������ "������"
-var Gl_ShortDescription = "";
-
-//<<==����. �������� [[3,1,0, [0,1,2]],[4,2,25, [3,4]]] - ������: 3 ���� ����� 1 ��� � ���������� 0% ������ ���� [0,1,2] �� Gl_aDeals , ����� 4 ���� ���� 2 ��� � ���������� 25% ������ ���� [3,4] �� Gl_aDeals
-
-
- 
-var Gl_aRithm = [ //1500 ��� 180+������ ����� � ��� (3 � � ���). ��� ������ �� -20 �� 20 �������� �������� �� 2.5 ���  (750���) �� ����������
-                  [1500,"(180 + 60*Math.sin(3.14*_������������_/125))/(2*3*60)",0,[24]],
-                 //[5, .3,0,[22]] ,
-                 //[16,"Math.trunc(_�������������_1/(8))+1",0,[21]],
-                 //[16,"Math.trunc((32-_�������������_1)/(8))+1",0,[22]]
-                 
-                ];  
-                
-
-//==>>
-
-//<<== ��������� ������� � ������� [<��� ������>,[<��������>,<�����������(������,���������)>]]:
 
 
 var Gl_aDeals =[//0
-                ["_�����������������������_ + ' ������'",["�����",1],["�������",1],["����� �������",1],["������",1],["����� ������",1],["�����",1],["����� �������",1],["����� ������",1]],
-                //1
-                ["",["������, ���� ���",4],["������ ������",2],["������, ������, ���� ���",2],["�������� �� ������� � ������� �����",1],["�������� ������ ������� � ������� �����",1],["�������� �� ������� � ������� ������",1],["�������� ������ ������� � ������� ������",1]],
-                //2
-                ["����",["�����",1],["�������",1],["����� �������",1],["������",1],["����� ������",1],["�����",1],["����� �������",1],["����� ������",1]],
-                //3
-                ["�����",["������. ��������� ����",1]],
-                //4
-                ["����� �� ����",["",1]],
-                //5
-                ["",["��������� � ������",1],["",4]],
-                //6
-                ["�����",["�������",3],["�����",2],["�������",2],["����� �������",2],["������",2],["����� ������",2],["����� �������",1],["����� ������",1]],
-                //7
-                ["",["������ - ���, ���, ���, ������",1],["�������� - �������, �������, �������, �������, �������, �������",1]],
-                //8
-                ["",["��������� ����",1]],
-                //9
-                ["",["�������� ������",2],["������",2],["������",2],["������ � ��������� �� �������",1],["������ � ��������� ������ �������",1]],
-                //10
-                ["",["����",2],["� ���� ����� ",2],["� ���� ������ ",2],["� ���� � ����� �������",2],["� ���� �����",2],["� ���� � ����� ������",2],["� ���� � ����� �������",1],["� ���� � ����� ������",1],["� ���� � �����",1]],
-                //11
-                ["",["",1]],                
-                //12
-                ["",["� �����",1],["�����",1],["����",1],["������",1],["����� ������",1],["�����",1],["����� �����",1],["���� ������",1],["���� �����",1],["����� �����",1],["����� ������",1],["����� �����",1]],
-                //13
-                ["���� ��������� - ���",["�����",1],["�������",1],["����� �������",1],["������",1],["����� ������",1],["�����",1],["����� �������",1],["����� ������",1]],
-                //14
-                ["",["1 ����",1],["2 �����",1],["3 �����",1],["4 �����",1],["5 ������",1],["6 ������",1],["7 ������",1],["8 ������",1],["9 ������",1],["10 ������",1]],
-                //15
-                ["�������� ������",["",1]], 
-                //16
-                ["",["�������� ������",2],["������",2],["������",2],["������ � ���������",1]],
-                //...
-                //17
-                ["������ �����, ��������",["�����",1],["������",1],["�����",1],["�����",1],["����� �������",1],["����� ������",1],["����� ������",1],["����� �����",1]],
-                //18
-                ["",["��������",1]], 
-                //19
-                ["",["���, ��������",1]],
-                //20
-                ["���",["�����",1],["�������",1],["������",1],["�����",1],["����� �������",1],["����� ������",1],["����� �������",1],["�����  ������",1]],    
-                //21
-                ["",["if(-Math.trunc(_�������������_1/8) + _�������������_1/8 > 0.49){ '����� '+Math.round((((_�������������_1) % 4)+1)*25)}else {'���� '+ Math.round((((_�������������_1) % 4)+1)*25)}",1]],
-                //22
-                ["",["if(-Math.trunc((   _�������������_1)/8) + (    _�������������_1)/8 > 0.49){ '������ '+Math.round((((_�������������_1) % 4)+1)*25)}else {'����� '+ Math.round((((_�������������_1) % 4)+1)*25)}",1]],
-                //23
-                ["",["->22,20",1]],
-                //24
-                ["",["if((_�������������_1%4) > 1){'����'}else {'����� '}",1]],
+                 ["отжимания вниз головой","по понедельникам"],
+				 ["подтягивания на одной руке", "по вторникам"],
+				 ["не есть до... ", "17"],
 
-               ];//==>>            
-          
-  //=== ������� ��� ������������� � ��������� ��������  =====
-  var _�������������_  = 1
-  var _�������������_1  = 0
-  var _����������������_ = 0
-  var _������������_ = 0
-  var _�����������_ = 0
-  var _�����������_ = 0
-  var _�����������������������_ = 0
-  //========================================================
-  
+               ];
 
-//##################################################################################
-//##################################################################################
-//##################################################################################
-</script>
-
-<script>
-  //������� �� ������ ��� ��������� ������� ���������� (��� �� ��������� ������������ ��� �� �������� - �� ������ ������ �����������!)   
-  const TXT_BTN_NOTSTARTED = "������";
-  const TXT_BTN_STARTED = "���� ����������...";
-  const TXT_BTN_PAUSED = "���������� ��������������...";    
-  const TXT_BTN_FINISHED = "���������� ���������";
-  //    
-  
-  var Gl_TestStr = "";
-  var Gl_nTimer = 0;
-  var Gl_dBeg = new Date();
-  var Gl_H = Gl_dBeg.getHours();
-  var Gl_M = Gl_dBeg.getMinutes();
-  var Gl_S = Gl_dBeg.getSeconds();
-  var Gl_Ms = Gl_dBeg.getMilliseconds();
-  var Gl_CountOfIterations = 0
-  //������� ��� ��������� ��� ����������
-  var GlnRepeat = 1;
-  
-  var Gl_dBegTraining //����� ������ ����������
-  var Gl_duration = 0 //����������������� ����������
-  
-  var dNowPrev
-  
-  //�������� ��������� ������ ��� �������. ���� �� ���������� ��������� ������ ��� ����
-  function ev(s){
-  	  if (!((s.trim())==""))
-  	    try{return eval(s)} catch {return s}
-  	  else return ""
+     function ev(s){
+  	  if (!((s.trim())=="")){
+  	    try{return eval(s)} catch (e){return s}
+  	 } else return "";
   }
-  var Gl_CurrDt = ev(String(Gl_aRithm[0][1]));
- 
-  //���������� ������� ������ ��� ���������� ���������� ���������� (����������� ������� �������, ����� ������� ����. ���. ���������� ����� � �������� ��������)
-  function fDecGl_aRithm ()� {
-    if (Gl_aRithm[0][0] > 1) {
-      Gl_aRithm[0][0] = Gl_aRithm[0][0] - 1;
-    }
-    else {
-    	 Gl_aRithm.splice(0,1);
-    };
-    Gl_CurrDt = ev(String(Gl_aRithm[0][1]));
-  }; 
- 
-  //�� ������ sInput ���� "<tag1>=kghkjh;<tagXXX>=6754;" �������� �������� (�� "=" �� ";" � ���� sTag (������?, ���� �� ���������)) (��� ���������������.)
-  function VbyTag (sTag,sInput)� {
-    var sRet = "" 
-    var nBeg = sInput.toLowerCase().indexOf(sTag.toLowerCase()) 
-    if (nBeg >= 0) {
-      nBeg = nBeg + sTag.length  
-      var flBeg = 0  
-      var flEnd = 0  
-      var i = nBeg
-      while ((i < sInput.length) && (flEnd == 0)&& !(sInput[i] == ';')){
-        if ((flBeg == 1) && (flEnd == 0)) sRet = sRet + sInput[i]  
-        if (sInput[i] == '=') flBeg = 1
-        if (sInput[i] == ';') {
-          flBeg = 0
-          flEnd = 1
-        }
-         
-        i++  
-      }
-    }
-    
-    return sRet
-    
-  }; 
-  /*
- //������ �������� �� ���� <id> (���������������.) ���� ���� ��� - ������ ��� ������
- function V(sInput)� {
- var sRet = VbyTag ("<id>",sInput)� 
- if (sRet.trim() == "") 
- if (!(sInput.toLowerCase().indexOf("<id>") >= 0)) sRet = sInput 
- return sRet
- };   
- //������ �������� �� ���� <say> (������������ ��� ������, ������� ����� ������������� �����) (���������������.) ���� ���� ��� - ������ ��� ������
- function Say(sInput)� {
- var sRet = VbyTag ("<say>",sInput)� 
- if (sRet.trim() == "") 
- if (!(sInput.toLowerCase().indexOf("<say>") >= 0)) sRet = sInput 
- return sRet
- };      
-
- //������ ������ ���� �� ������ - ���� � ��� ���� ��� <id>, �� �������� ���� ��    
- //function DealInd(sIdOrInd)� {
- //  var sRet = VbyTag ("<say>",sInput)� 
- //  if (sRet.trim() == "") 
- //    if (!(sInput.toLowerCase().indexOf("<say>") >= 0)) sRet = sInput 
- //  return sRet
- //};          
- */ 
-     
-� //����� �������� ����������. aDealIndexes - ������ �������� ��� , ������� �������� � ������� ����������� �����
-� function fget_TextToSpeek(aDealIndexes)
-��{�var sTextToSpeek = "";
-    var sPoint = "";
-��� for (var i=0, len0=aDealIndexes.length; i<len0; i++) {
-	     sTextToSpeek += ev(Gl_aDeals[aDealIndexes[i]][0])+ " ";
-����� var nFullProp = 0;
-����� for (var j=1, len=Gl_aDeals[aDealIndexes[i]].length; j<len; j++) {
-������� nFullProp += Gl_aDeals[aDealIndexes[i]][j][1]; //������ ��������� ������
-����};
-��� var nRandProp = Math.floor(Math.random() * (nFullProp� - 0 + 1)) + 0; //��������� ����� ��� ����������� ������ �� ��������� ������
-��� var nCurrProp = 0;//0 sic!
-��� var k = 1;
-��� while ((nCurrProp <= nRandProp)
-            &&( Gl_aDeals[aDealIndexes[i]].length >k)
-          ) {��� //������� ������� ������ - ���������, �� �������� ����� ��������� < nRandProp  //<= sic!
-������nCurrProp += Gl_aDeals[aDealIndexes[i]][k][1];
-����� k = k + 1;
-����};
-    sPoint = (Gl_aDeals[aDealIndexes[i]][k-1][0])
-    //��������� ������ �� ���� � ����
-    //!!! ��������� ��������� ���������� ��� ->
-    //!!! ��������� ������������ ������� �  eval �� ��� ��������� �� ������ ������� � �� �������
-    if ((sPoint.indexOf(">") > 0)
-        && (sPoint.indexOf(">") < 2) //-> ������ �������!!!
-       ) {
-    	  sPoint = sPoint.replace("->","")
-    	  var aPointIndexes = sPoint.split(",")
-    	  sTextToSpeek += " "  + fget_TextToSpeek( aPointIndexes ) + ", "
-    }
-    else{
-���   sTextToSpeek += " " + ev(Gl_aDeals[aDealIndexes[i]][k-1][0]) + ", "; //-1 sic! 
-    }
-��};
-���� return sTextToSpeek;
-��} //fget_TextToSpeek
   
-
-� //�������� �������. ��������� - ���� � ������ ������ ������� ����� ��������� ����������, �� �������
-� function fMain()
-� { //���� ������� �������� ������ - �� ���� ������, ���� �� ������� �� � 0
-    if (GlnDelay > 0) {
-      var 
-      dCurrWait = new Date();
-      var 
-      HCurrWait = dCurrWait.getHours();
-      var 
-      MCurrWait = dCurrWait.getMinutes();
-      var 
-      SCurrWait = dCurrWait.getSeconds();
-      var 
-      MsCurrWait = dCurrWait.getMilliseconds();
-      
-      if ((HCurrWait - Gl_H)*60*60+(MCurrWait - Gl_M)*60+(SCurrWait - Gl_S) >= 1){
-        GlnDelay = GlnDelay - 1;
-        Gl_dBeg = new Date();
-        Gl_H = Gl_dBeg.getHours();
-        Gl_M = Gl_dBeg.getMinutes();
-        Gl_S = Gl_dBeg.getSeconds();��  
-        Gl_Ms = Gl_dBeg.getMilliseconds();
-        if ((GlnDelay == 0)&&(!(button.firstChild.data == TXT_BTN_PAUSED))) {
-          GltxtSpeek.value = GltxtSpeek.value + "===�" + Gl_H + ":" + Gl_M + ":" + Gl_S + "�===  �������� ������������ ������ ��������� ====" + "\n\n";
-          GltxtSpeek.scrollTop = GltxtSpeek.scrollHeight;
-          try {
-����  �     var utterance2 = new SpeechSynthesisUtterance("�������� ������������ ������ ���������");
-�����       window.speechSynthesis.speak(utterance2);
-          }
-          catch {
-      	     //GltxtSpeek.value = GltxtSpeek.value + "�� ��������� ���������� �����\n";
-          };            
-        };
-        return;
-      }  
-    } 
-      
-      
-    if ((GlnDelay == 0)&&
-      ((button.firstChild.data == TXT_BTN_NOTSTARTED)||(button.firstChild.data == TXT_BTN_STARTED))){ 
-      var dCurr = new Date();
-      var HCurr = dCurr.getHours();
-      var MCurr = dCurr.getMinutes();
-      var SCurr = dCurr.getSeconds();
-      var MsCurr = dCurr.getMilliseconds();
-      //������� �� ���� ������� �������
-      //if (sCurr%2 == 0){
-      	//  button.style.backgroundColor = "#F6F6f6";}
-     // else {
-      //  button.style.backgroundColor = "#fc0707";}
-      var nRandDispers = Math.floor(Math.random() *ev(String(Gl_aRithm[0][1])) * ev(String(Gl_aRithm[0][2])) / 100);
-      nRandDispers *= Math.floor(Math.random() * 3 - 1);//+1 or -1 random
-      if ((HCurr - Gl_H)*60*60+(MCurr - Gl_M)*60+(SCurr - Gl_S) + (MsCurr - Gl_Ms)/1000 >= Gl_CurrDt + nRandDispers){
-        var dNow1 = new Date()
-        _�����������������������_ = Math.floor(100*(dNow1 - Gl_dBegTraining)/(1000*(Gl_duration+1)))
-        _����������������_ =Math.floor((dNow1 - Gl_dBegTraining))
-        _������������_ = Math.floor( _����������������_/1000)
-        _�����������_ = Math.floor(_������������_/60)
-        _�����������_ = Math.floor(_�����������_/60)
-        var sTextToSpeek = fget_TextToSpeek(Gl_aRithm[0][3]);
-        //
-        var dNow = new Date();
-        var dT = dNow - dNowPrev;
-        dNowPrev = dNow;
-        GltxtSpeek.value = GltxtSpeek.value + "� " + dNow.getHours() + ":" + dNow.getMinutes() + ":" + dNow.getSeconds()  + ":" + dNow.getMilliseconds()+ "������.����� = " + nRandDispers + " ���.   " + sTextToSpeek + "\n" + dT + "  ������ ���.:" + _������������_+ "\n";
-        GltxtSpeek.scrollTop = GltxtSpeek.scrollHeight;
-        
-        
-        //
-        try {
-          var utterance = new SpeechSynthesisUtterance(/*"��������, " +*/ sTextToSpeek /*+ "�����!"*/);
-          window.speechSynthesis.speak(utterance);
-          _�������������_ +=1
-          _�������������_1 +=1
-          if (Gl_CountOfIterations < _�������������_){
-           _�������������_ = 1
-           _�������������_1 = 0
-          }
-        }
-        catch {
-      	   //GltxtSpeek.value = GltxtSpeek.value + "�� ��������� ���������� �����\n";
-        };
-        //
-        Gl_dBeg = new Date();
-        Gl_H = Gl_dBeg.getHours();
-        Gl_M = Gl_dBeg.getMinutes();
-        Gl_S = Gl_dBeg.getSeconds();
-        Gl_Ms = Gl_dBeg.getMilliseconds();
-        
-        fDecGl_aRithm();
- 
-      };  
-      var  //!!!!!!!!!!???
-      Gl_dCurr = new Date();
-      if (Gl_aRithm.length <1) {
-      	GltxtSpeek.value = GltxtSpeek.value + "\n== " + Gl_dCurr.getHours() + ":" + Gl_dCurr.getMinutes() + ":" + Gl_dCurr.getSeconds() + " === ���������� ���������. ======================\n"
-        GltxtSpeek.scrollTop = GltxtSpeek.scrollHeight;  
-        try {
-          var utterance1 = new SpeechSynthesisUtterance("���������� ���������.\n");
-          window.speechSynthesis.speak(utterance1);
-        }
-        catch {};
-      
-        button.firstChild.data = TXT_BTN_FINISHED;
-        button.disabled = true;
-      }  
-    }
-  }; //fMain    
-    
-  //����� ���������� � ���������� ����������    
-  function loadTrainData() {
-    button.firstChild.data = TXT_BTN_NOTSTARTED;
-    button.style.width = document.body.clientWidth - 20; 
-    GltxtSpeek.style.width = button.style.width;
-    //
-    //var oTxt = document.getElementById('idTextsToSpeek')
-    GltxtSpeek.value = "===  ����������:  =========================\n\n";
-    var nDuration = 0
-    for(var i = 0; i< Gl_aRithm.length; i++){ 
-      nDuration += Gl_aRithm[i][0]*ev(String(Gl_aRithm[i][1]))    
-    }
-    Gl_duration = nDuration 
-    var nSecDur = nDuration % 60  
-    var nMinDur = (Math.floor(nDuration / 60)) % 60  
-    var nHDur = Math.floor(Math.floor(nDuration / 60) / 60) % 60
-    GltxtSpeek.value +="\n�����������������:  " + nHDur + " �����, " + nMinDur + " �����, " + nSecDur + " ������\n" 
-    
-    GltxtSpeek.value = GltxtSpeek.value + "\n" + Gl_ShortDescription + "\n\n"
-      
-    for(var i = 0; i< Gl_aRithm.length; i++){ 
-      Gl_CountOfIterations += Gl_aRithm[i][0] 
-      GltxtSpeek.value +="\n� �����:  ";
-      GltxtSpeek.value += Gl_aRithm[i][0] + " ��� �� " + ev(String(Gl_aRithm[i][1])) + " ���. � ���������� " +ev(String(Gl_aRithm[i][2])) + "%";//\n";
-      GltxtSpeek.value += "  ����������:\n";
-      for(var j = 0; j< Gl_aRithm[i][3].length ; j++) {
-       GltxtSpeek.value += "  " + (j+1) + ": ";// \n";//":\n";
-       //for (var k = 1; k< Gl_aRithm[i][3].length; k++){
-       GltxtSpeek.value += "  " + Gl_aDeals[Gl_aRithm[i][3][j]][0] + ", ���� �� ������������� (� ����� �����������):  \n";
-       var nFProp = 0;
-       for (var l=1; l<Gl_aDeals[Gl_aRithm[i][3][j]].length; l++)  nFProp += Gl_aDeals[Gl_aRithm[i][3][j]][l][1];       
-       for (var l=1; l<Gl_aDeals[Gl_aRithm[i][3][j]].length; l++){
-         GltxtSpeek.value +="          " + Gl_aDeals[Gl_aRithm[i][3][j]][l][0] + " ( " + Gl_aDeals[Gl_aRithm[i][3][j]][l][1] + " �� " + nFProp + ")\n" 
-       // }   
-       }  
-      };    
-    }
-
-    GltxtSpeek.value += "\n\n ��� ��������� ���������� ���������� ������������� ����������� ���� html.\n";   
-  }
-          
-  //��������� �������� ��������� ��� ��������� �������� ����          
   function resizeAll(){
     button.style.width = document.body.clientWidth - 20; 
     GltxtSpeek.style.width = button.style.width;
   }    
-</script>�
-	�
+  </script>
+
+ 
   </head>
-  �
+  
   <body onload="loadTrainData()" onresize = "resizeAll()">
 
   <p>
-	<button id = "idStartBtn" style = "width:600px;height:100px" >������</button>
+	<button id = "idStartBtn" style = "width:600px;height:100px" >333333</button>
   </p>
-  �
+  
   <p>
-	�������� ������ �� 
 	<textarea id = "idTxtDelay" style = "width:50px;height:20px" value = '0'> </textarea>
-	���.
   </p>
   <p>
-
-	��������� ���������� 
 	<textarea id = "idTxtRepeat" style = "width:50px;height:20px" value = '1'> </textarea>
-	���
   </p>
 
   <p>
 	<textarea id = "idTextsToSpeek" style = "width:600px;height:400px"> </textarea>
   </p>
 
-  �
+  
 
 <script>
      
-� var button = document.getElementById("idStartBtn");//.body.firstElementChild;
+  var button = document.getElementById("idStartBtn");//.body.firstElementChild;
   var GltxtSpeek  = document.getElementById("idTextsToSpeek");  
   var GlUtterance = new SpeechSynthesisUtterance("");    
     
-  //��� �������� ������ ���������� (����� ��������� �������� ����� ������� ��������� ������)
+  
   var GlnDelay = 0;
     
-  //��������� ������ �� ������ � ������������ � ������� �������� ����������. ������ ��������� �����-�������   
   button.onclick = function()
   { 
-//alert(ev("2+2"))
-//alert(V ("<qw6> = 123;<id>=;  <qw4>=32 1 6"))
-      if ((Gl_ShortDescription.trim().length > 0)&&(button.firstChild.data == TXT_BTN_NOTSTARTED)) {
-        try {
-          //GltxtSpeek.value = GltxtSpeek.value + "\n" + Gl_ShortDescription + "\n\n"
-          var utterance0 = new SpeechSynthesisUtterance("���� ����������: " + Gl_ShortDescription)
-          window.speechSynthesis.speak(utterance0)
-        }
-        catch {
-          GltxtSpeek.value = GltxtSpeek.value + "\n�� ��������� ���������� �����. ����������� ������� CHROME\n\n";
-        }    
-      }
-    
-      
-      
-      
-    //������� - ��������� ������ ������, ���� ����� ��������� ����� 1 ����
-  	  if ( Number(document.getElementById("idTxtRepeat").value) ===     //�������� �� �����:   � === (�^0)
-  	       (Number(document.getElementById("idTxtRepeat").value) ^ 0)) {
-  	  	  GlnRepeat = Number(document.getElementById("idTxtRepeat").value);
-  	  	  document.getElementById("idTxtRepeat").disabled = true;
-  	  } 
-  	  else {
-  	  	  GlnRepeat = 1;
-  	  	  alert('������� ����� ����� ���, ������� ����� ��������� ����������, � ������� ������ �����.');
-  	  	  return;
-  	  }
-      if (GlnRepeat > 1) {  //�������� ������ Gl_aRithm � GlnRepeat ���
-        var nL = Gl_aRithm.length  
-        Gl_aRithm.length = (nL * GlnRepeat)    
-        for(var inL = 1; inL<=nL; inL++){  
-            for (var i =0; i<nL; i++){ 
-              Gl_aRithm[i+nL*inL] = []    
-              Gl_aRithm[i+nL*inL].length = Gl_aRithm[i].length    
-              for (var j =0; j<Gl_aRithm[i].length; j++) {   
-                if (j==3){  
-                  Gl_aRithm[i+nL*inL][j] = []
-                  Gl_aRithm[i+nL*inL][j].length = Gl_aRithm[i][j].length
-                }
-                if (!(j == 3)){
-                  Gl_aRithm[i+nL*inL][j] = Gl_aRithm[i][j] 
-                }
-                else
-                  for (var k =0; k<Gl_aRithm[i][j].length; k++){ 
-                      Gl_aRithm[i+nL*inL][j][k] = Gl_aRithm[i][j][k] 
-                  }  
-              }
-            }
-        }
-      }     
- 
-    //��� �������� ������ ���������� (����� ��������� �������� ����� ������� ��������� ������)
-  	  if (
-          ( Number(document.getElementById("idTxtDelay").value) ===     //�������� �� �����:   � === (�^0)
-  	       (Number(document.getElementById("idTxtDelay").value) ^ 0)) 
-            
-          ){
-          if (!(button.firstChild.data == TXT_BTN_PAUSED))
-  	  	    GlnDelay = Number(document.getElementById("idTxtDelay").value)
-          else GlnDelay = 0;
-  	  	  document.getElementById("idTxtDelay").disabled = true;
-  	  } 
-  	  else {
-  	  	  GlnDelay = 0;
-  	  	  alert('������� ����� ����� ������, �� ������� ����� ��������� ������ � ������� ������ ��� ���.');
-  	  	  return;
-  	  }
-
-    var dNow = new Date();        
-    try {
-	   var utterance = new SpeechSynthesisUtterance("\n\n���������� ������\n\n");
-      if (!(
-          (button.firstChild.data == TXT_BTN_NOTSTARTED)  ||
-          (button.firstChild.data == TXT_BTN_PAUSED)))	   	
-        utterance = new SpeechSynthesisUtterance("\n\n���������� ��������������\n\n");
-      window.speechSynthesis.speak(utterance);
-    }
-    catch {
-    	 GltxtSpeek.value = GltxtSpeek.value + "\n�� ��������� ���������� �����. ����������� ������� CHROME\n\n";
-    };
-
-     
-    if (
-        (button.firstChild.data == TXT_BTN_NOTSTARTED)  ||
-        (button.firstChild.data == TXT_BTN_PAUSED)){    
-      GltxtSpeek.value = GltxtSpeek.value + "\n=== " + dNow.getHours() + ":" + dNow.getMinutes() + ":" + dNow.getSeconds() + " === ���������� ������ ==========================\n\n";
-      GltxtSpeek.scrollTop = GltxtSpeek.scrollHeight;    
-      button.firstChild.data = TXT_BTN_STARTED;
-      Gl_dBegTraining = new Date()
-      if (GlnDelay > 0) {
-    	    GltxtSpeek.value = GltxtSpeek.value + "\n=== " + dNow.getHours() + ":" + dNow.getMinutes() + ":" + dNow.getSeconds() + " === ������ ���������� �������� �� "+ GlnDelay +" ���. ======\n\n";
-    	    GltxtSpeek.scrollTop = GltxtSpeek.scrollHeight;    
-      }
-    } else {
-      if (button.firstChild.data == TXT_BTN_STARTED){    
-        GltxtSpeek.value = GltxtSpeek.value + "\n=== " + dNow.getHours() + ":" + dNow.getMinutes() + ":" + dNow.getSeconds() + " === ���������� �������������� ==================\n\n";
-        button.firstChild.data = TXT_BTN_PAUSED;
-        GltxtSpeek.scrollTop = GltxtSpeek.scrollHeight;
-      };// else ;  
-    };
- 
-    //* 
-    //#####  ������� ���� � ���������� �� 1 ��  ########################################�
-      if (
+       if (
         (button.firstChild.data == TXT_BTN_NOTSTARTED)  ||
         (button.firstChild.data == TXT_BTN_STARTED)     ||
         (button.firstChild.data == TXT_BTN_PAUSED)) 
         { dNowPrev = new Date();
-        	 setInterval(fMain,1);  //���� � ���������� �� 1 ��
+        	// setInterval(fMain,1);  //���� � ���������� �� 1 ��
         	} 
-    //##################################################################################
-    //* 
-� 
+    
+    
+
   }
 </script>
 </html>
