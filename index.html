@@ -1,30 +1,40 @@
 <html>
   <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <!-- Настройка viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <!-- Подключаем Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" >
 	<title>Calendar</title>
 
 
     <script>
     var Gl_aDeals =[
-	
-	      //workout
-	      ["отжимания вниз головой","по понедельникам","GlDate.getDay()==1"],
-	      ["подтягивания на одной руке", "по вторникам","GlDate.getDay()==2"],
-          ["флаг", "по четвергам","GlDate.getDay()==4"],
-	      ["флаг", "по пятницам","GlDate.getDay()==5"],
-	      ["спичаги с брусьев на количество", "по субботам","GlDate.getDay()==6"],
-	      ["спичаги с рук на количество. ходба на руках.", "по воскресеньям","GlDate.getDay()==0"],
+	      //===  значения колонок  ====
+		  ["id","name","period_description","period_formula","button_onclick"],
+		  //доступ по имени поля а не по индексу такой:  item[ Gl_aDeals[0].indexOf('name') ]
+		  //!!! нужно делать доступ по имени поля чтобы всегда можно было добавить поля
+		  ["id","наименование дела","описание периодичности","'функция выводить либо не выводить в тек. список'==''","функция вызова онлайн ритма, если нужно вывести в виде кнопки"],
+	      //===========================
+		  
+		  //workout
+	      [1,"отжимания вниз головой","по понедельникам","GlDate.getDay()==1"],
+	      [2,"подтягивания на одной руке", "по вторникам","GlDate.getDay()==2"],
+          [3,"флаг", "по четвергам","GlDate.getDay()==4"],
+	      [4,"флаг", "по пятницам","GlDate.getDay()==5"],
+	      [5,"спичаги с брусьев на количество", "по субботам","GlDate.getDay()==6"],
+	      [6,"спичаги с рук на количество. ходьба на руках.", "по воскресеньям","GlDate.getDay()==0"],
           
 		  //health and impot..
-		  ["'не есть до ' + switch (4){case 4: '17';case 6: '18';default: '19';}", "по средам","GlDate.getDay()==5"],
+		  [101,"'не есть до ' + switch (4){case 4: '17';case 6: '18';default: '19';}", "по средам","GlDate.getDay()==5","alert('100500')"],
 	
         ];
 
     //пытаемся вычислить строку как формулу. если не получается оставляем строку как есть
     function ev(s){
   	  if (!((s.trim())==""))
-  	    try{return eval(s)} catch(e) {return s;}
+  	    try{return eval(s);} catch(e) {return s;}
   	  else return "";
     }
 	
@@ -33,25 +43,47 @@
 	    // GltxtSpeek.style.width = button.style.width;
     }    
     function loadCurrentData() {
-	  var GltxtSpeek  = document.getElementById("idTextsToSpeek");
+	  //var GltxtSpeek  = document.getElementById("idTextsToSpeek");
+	  var button  = document.getElementById("idStartBtn");
 	  var GlDate = new Date();
 	
 	  Gl_aDeals
-		.filter(function(item, i, arr) {return eval(item[2]) > 0;})
+		.filter(function(item, i, arr) { try { return eval(item[ Gl_aDeals[0].indexOf('period_formula') ]) > 0;} catch (e) {return false;};})
 		.forEach(
 		function(item, i, arr) { 
-			GltxtSpeek.value += "" + (i+1) + ": " + ev(item[0]) + " - " + ev(item[1]) + "\n";});
+			//old GltxtSpeek.value += "" + (i+1) + ": " + ev(item[0]) + " - " + ev(item[1]) + "\n"
+			// Создаем элемент ДИВ
+            var div = document.createElement("div");
+            // Добавляем HTML-контент с пом. свойства innerHTML
+            div.innerHTML = '<li>' + (i+1) + ': ' + ev(item[Gl_aDeals[0].indexOf('name')]) + ' - ' + ev(item[ Gl_aDeals[0].indexOf('period_description') ]) + '\n</>';
+            
+			//Опасно! работает только если формула последняя колонка
+			//.... проверить по отсутствию илибо пустому элементу
+			//if (item.length>= 5/*-1+Gl_aDeals[0].indexOf('period_formula') */)  
+			if (!!item[Gl_aDeals[0].indexOf('button_onclick')] )  
+			  div.innerHTML += '<button ' + ' onclick="' + item[ Gl_aDeals[0].indexOf('button_onclick') ] + '">Запустить</>';
+			div.innerHTML += '<p></p>';
+			// Добавляем новый узел в конец списка полей
+            document.getElementById("divInit").appendChild(div);
+			
+			;});
     }    
     </script>
 
 
   </head>
   <body onload="loadCurrentData()" onresize = "resizeAll()">
+	<h3 class="bg-primary p-a-1">Текущие дела: </h3>
+	<div id = "divInit"></div>
+	<!--
 	<p>
 	  <textarea id = "idTextsToSpeek" style = "width:600px;height:400px"></textarea>
 	</p>
+	-->
+	<p></p>
+	<p></p>
 	<p>
-	  <button id = "idStartBtn" style = "width:600px;height:100px" onclick="{alert((new Date()).getMonth());}" >test feachure</button>
+	  <button id = "idStartBtn" style = "width:100px;height:30px" onclick="{alert(!!Gl_aDeals[1]);}" >test feachure</button>
 	</p>
   </body>
 </html>
