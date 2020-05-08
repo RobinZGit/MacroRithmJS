@@ -1,74 +1,57 @@
 <html>
   <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
 	<title>Calendar</title>
-  <script>
 
 
+    <script>
+    var Gl_aDeals =[
+	
+	      //workout
+	      ["отжимания вниз головой","по понедельникам","GlDate.getDay()==1"],
+	      ["подтягивания на одной руке", "по вторникам","GlDate.getDay()==2"],
+          ["флаг", "по четвергам","GlDate.getDay()==4"],
+	      ["флаг", "по пятницам","GlDate.getDay()==5"],
+	      ["спичаги с брусьев на количество", "по субботам","GlDate.getDay()==6"],
+	      ["спичаги с рук на количество. ходба на руках.", "по воскресеньям","GlDate.getDay()==0"],
+          
+		  //health and impot..
+		  ["'не есть до ' + switch (4){case 4: '17';case 6: '18';default: '19';}", "по средам","GlDate.getDay()==5"],
+	
+        ];
 
-var Gl_aDeals =[//0
-                 ["отжимания вниз головой","по понедельникам"],
-				 ["подтягивания на одной руке", "по вторникам"],
-				 ["не есть до... ", "17"],
+    //пытаемся вычислить строку как формулу. если не получается оставляем строку как есть
+    function ev(s){
+  	  if (!((s.trim())==""))
+  	    try{return eval(s)} catch(e) {return s;}
+  	  else return "";
+    }
+	
+    function resizeAll() {
+	    // button.style.width = document.body.clientWidth - 20; 
+	    // GltxtSpeek.style.width = button.style.width;
+    }    
+    function loadCurrentData() {
+	  var GltxtSpeek  = document.getElementById("idTextsToSpeek");
+	  var GlDate = new Date();
+	
+	  Gl_aDeals
+		.filter(function(item, i, arr) {return eval(item[2]) > 0;})
+		.forEach(
+		function(item, i, arr) { 
+			GltxtSpeek.value += "" + (i+1) + ": " + ev(item[0]) + " - " + ev(item[1]) + "\n";});
+    }    
+    </script>
 
-               ];
 
-     function ev(s){
-  	  if (!((s.trim())=="")){
-  	    try{return eval(s)} catch (e){return s}
-  	 } else return "";
-  }
-  
-  function resizeAll(){
-    button.style.width = document.body.clientWidth - 20; 
-    GltxtSpeek.style.width = button.style.width;
-  }    
-  </script>
-
- 
   </head>
-  
-  <body onload="loadTrainData()" onresize = "resizeAll()">
-
-  <p>
-	<button id = "idStartBtn" style = "width:600px;height:100px" >333333</button>
-  </p>
-  
-  <p>
-	<textarea id = "idTxtDelay" style = "width:50px;height:20px" value = '0'> </textarea>
-  </p>
-  <p>
-	<textarea id = "idTxtRepeat" style = "width:50px;height:20px" value = '1'> </textarea>
-  </p>
-
-  <p>
-	<textarea id = "idTextsToSpeek" style = "width:600px;height:400px"> </textarea>
-  </p>
-
-  
-
-<script>
-     
-  var button = document.getElementById("idStartBtn");//.body.firstElementChild;
-  var GltxtSpeek  = document.getElementById("idTextsToSpeek");  
-  var GlUtterance = new SpeechSynthesisUtterance("");    
-    
-  
-  var GlnDelay = 0;
-    
-  button.onclick = function()
-  { 
-       if (
-        (button.firstChild.data == TXT_BTN_NOTSTARTED)  ||
-        (button.firstChild.data == TXT_BTN_STARTED)     ||
-        (button.firstChild.data == TXT_BTN_PAUSED)) 
-        { dNowPrev = new Date();
-        	// setInterval(fMain,1);  //���� � ���������� �� 1 ��
-        	} 
-    
-    
-
-  }
-</script>
+  <body onload="loadCurrentData()" onresize = "resizeAll()">
+	<p>
+	  <textarea id = "idTextsToSpeek" style = "width:600px;height:400px"></textarea>
+	</p>
+	<p>
+	  <button id = "idStartBtn" style = "width:600px;height:100px" onclick="{alert((new Date()).getMonth());}" >test feachure</button>
+	</p>
+  </body>
 </html>
