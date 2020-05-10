@@ -8,9 +8,23 @@
     <link rel="stylesheet" href="css/bootstrap.min.css" > -->
 	<title>Calendar</title>
 
-
+    <style>"font-size: 200%" 
+    </style>
 <script>
-var Gl_aDeals =[
+/*
+1. сетка. массив лет/месяцев/недель/дней/часов... (размерность сетки) от начальной до конечной точки
+   -выкидываем из массива часть точек (опр. периоды размерности сетки (пн-пт) и тп.)
+   -если нужно выкидываем из остатка точки по ФУНКЦИИ ЧАСТОТЫ. Тогда нужна еще
+     СУПЕРРАЗМЕРНОСТЬ. Напр размерность день суперразмерность неделя. Функция частоты от 0 до 1. 
+	 Считаем ее значение в начале каждого интервала суперразмерности
+	 кол во точек которые надо оставить в интервале равно этой частоте умножить на кол во точек в интервале
+	 эти точки раскидываем по интервалу равномерно начиная с заполненной точки и через равные промежутки
+   -в результате остается массив действующих точек. По нему считаем выдавать сообщение или нет. 
+     По нему же считаем ОБЪЕМ СЕТКИ = ОБЪЕМ ВРЕМЕНИ
+   
+ 2. Величина нагрузки. Размерность величины. Считанм по ФОРМУЛЕ-ПОСЛЕДОВАТЕЛЬНОСТИ НАГРУЗКИ 
+*/
+var Gl_aCalendar=[
 	//===  значения колонок  ====
 	["id","name","period_description","period_type","period_formula","button_onclick"],
 	//доступ по имени поля а не по индексу такой:  item[ Gl_aDeals[0].indexOf('name') ]
@@ -34,7 +48,7 @@ var Gl_aDeals =[
 	[100001,"6 мин из 60 стоп", "по выходным","","true",""],
 	
 	//тест
-	[1000001,"ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
+	//[1000001,"ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
 
 ];
 
@@ -51,37 +65,91 @@ function resizeAll() {
 	// GltxtSpeek.style.width = button.style.width;
 }
 
+//основная функция. вывод списка текеущих дел
 function loadCurrentData() {
 	//var GltxtSpeek  = document.getElementById("idTextsToSpeek");
 	var button  = document.getElementById("idStartBtn");
 	var GlDate = new Date();
 
-	Gl_aDeals
+	Gl_aCalendar
 		.filter(function(item, i, arr) { try
-					{ return eval(item[Gl_aDeals[0].indexOf('period_formula')]) > 0;} catch (e) {return false;};})
+					{ return eval(item[Gl_aCalendar[0].indexOf('period_formula')]) > 0;} catch (e) {return false;};})
 		.forEach(
 		function(item, i, arr) { 
 			//old GltxtSpeek.value += "" + (i+1) + ": " + ev(item[0]) + " - " + ev(item[1]) + "\n"
 			// Создаем элемент ДИВ
 			var div = document.createElement("div");
 			// Добавляем HTML-контент с пом. свойства innerHTML
-			div.innerHTML = '<li>' + ev(item[Gl_aDeals[0].indexOf('name')]) + ' - ' + ev(item[Gl_aDeals[0].indexOf('period_description')]) + '\n</>';
-			if (!!item[Gl_aDeals[0].indexOf('button_onclick')])  
-				if (item[Gl_aDeals[0].indexOf('button_onclick')].trim().length > 0)
-					div.innerHTML += '<button ' + ' onclick="' + item[Gl_aDeals[0].indexOf('button_onclick')] + '">Запустить</>';
-			div.innerHTML += '<p> </p><p> </p>';
+			div.innerHTML = '<li>' + ev(item[Gl_aCalendar[0].indexOf('name')]) + ' - ' + ev(item[Gl_aCalendar[0].indexOf('period_description')]);// + '</>';
+			if (!!item[Gl_aCalendar[0].indexOf('button_onclick')])  
+				if (item[Gl_aCalendar[0].indexOf('button_onclick')].trim().length > 0)
+					div.innerHTML += '<button ' + ' onclick="' + item[Gl_aCalendar[0].indexOf('button_onclick')] + '">Запустить</>';
+			div.innerHTML += '</li><p> </p><p> </p>';
 			// Добавляем новый узел в конец списка полей
 			document.getElementById("divInit").appendChild(div);
 
 			;});
-}    
+}  
+
+//калькулятор ритмов
+function startCalculator(){
+  //document.getElementById("divCalendar").removeChild();
+  if (!document.getElementById("divCalendar").hasChildNodes()){
+    var sSelectSetkaDimension = '<select><option disabled>Выберите размерность:</option><option value="час">час</option><option selected value="день">день</option><option value="неделя">неделя</option><option value="месяц">месяц</option><option value="год">год</option></select>';
+	
+    //
+    var div = document.createElement("div");
+    div.innerHTML = '<div>'  + 'Калькулятор ритма' + '\n</>';
+    document.getElementById("divCalendar").appendChild(div);
+	//
+	div = document.createElement("div");
+    div.innerHTML = '<li>'  + 'Настройка временной сетки' + '\n</>';
+    document.getElementById("divCalendar").appendChild(div);
+	//
+	div = document.createElement("div");
+    div.innerHTML = '<label>'  + 'Размерность сетки' + '\n</>';
+    document.getElementById("divCalendar").appendChild(div);
+	//
+	div = document.createElement("div");
+    div.innerHTML =sSelectSetkaDimension;
+	div = document.getElementById("divCalendar").appendChild(div);
+	//
+	div = document.createElement("div");
+    div.innerHTML = '<div>'  + 'Размерность отрезка разбинения (д.б. крупней размерности сетки, например "неделя" для размерности "день")' + '\n</>';
+    document.getElementById("divCalendar").appendChild(div);
+	// !сделать пред размерность плюс уровень выше
+	div = document.createElement("div");
+    div.innerHTML =sSelectSetkaDimension;
+	div = document.getElementById("divCalendar").appendChild(div);
+    //
+	div = document.createElement("div");
+    div.innerHTML ='<p>Дата начала периода: <input type="date" name="calendar">';
+	div = document.getElementById("divCalendar").appendChild(div);
+	//
+	div = document.createElement("div");
+    div.innerHTML ='<p>Дата окончания периода: <input type="date" name="calendar">';
+	div = document.getElementById("divCalendar").appendChild(div);
+	
+	//
+	//
+	div = document.createElement("div");
+    div.innerHTML = '<li>'  + 'Настройка ритма на сетке' + '\n</>';
+    document.getElementById("divCalendar").appendChild(div);
+	//
+	// ? не работает скрыть все..
+	div = document.createElement("div");
+    div.innerHTML = '<button onclick="document.getElementById("divCalendar").deleteData()">'  + 'Скрыть калькулятор' + '\n</>';
+    document.getElementById("divCalendar").appendChild(div);
+	//
+  }
+}
 </script>
 
 
   </head>
-  <body onload="loadCurrentData()" onresize = "resizeAll()">
+  <body onload="loadCurrentData()" onresize = "resizeAll()" style="color: #633366; font-size:250%">
 	<h3 class="bg-primary p-a-1">Текущие дела: </h3>
-	<div id = "divInit"></div>
+	<div id = "divInit" style="color: #633366; font-size:90%"></div>
 	<!--
 	<p>
 	<textarea id = "idTextsToSpeek" style = "width:600px;height:400px"></textarea>
@@ -90,7 +158,8 @@ function loadCurrentData() {
 	<p></p>
 	<p></p>
 	<p>
-	  <button id = "idStartBtn" style = "width:100px;height:30px" onclick="{alert(Gl_aDeals[0][1].trim().length);}" >test feachure</button>
+	  <button id = "idCalculator" style = "width:200px;height:30px" onclick="startCalculator()" >Калькулятор ритмов</button>
 	</p>
+	<div id = "divCalendar" style="color: #333366; font-size:100%"></div>
   </body>
 </html>
