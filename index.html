@@ -8,47 +8,53 @@
     <link rel="stylesheet" href="css/bootstrap.min.css" > -->
 	<title>Calendar</title>
 
-    <style>"font-size: 200%" 
-    </style>
+<style>"font-size: 200%" 
+</style>
 <script>
 /*
-1. тест сетка. массив лет/месяцев/недель/дней/часов... (размерность сетки) от начальной до конечной точки
-   -выкидываем из массива часть точек (опр. периоды размерности сетки (пн-пт) и тп.)
-   -если нужно выкидываем из остатка точки по ФУНКЦИИ ЧАСТОТЫ. Тогда нужна еще
-     СУПЕРРАЗМЕРНОСТЬ. Напр размерность день суперразмерность неделя. Функция частоты от 0 до 1. 
-	 Считаем ее значение в начале каждого интервала суперразмерности
-	 кол во точек которые надо оставить в интервале равно этой частоте умножить на кол во точек в интервале
-	 эти точки раскидываем по интервалу равномерно начиная с заполненной точки и через равные промежутки
-   -в результате остается массив действующих точек. По нему считаем выдавать сообщение или нет. 
-     По нему же считаем ОБЪЕМ СЕТКИ = ОБЪЕМ ВРЕМЕНИ
-   
+ 1. сетка. массив лет/месяцев/недель/дней/часов... (размерность сетки) от начальной до конечной точки
+ -выкидываем из массива часть точек (опр. периоды размерности сетки (пн-пт) и тп.)
+ -если нужно выкидываем из остатка точки по ФУНКЦИИ ЧАСТОТЫ. Тогда нужна еще
+ СУПЕРРАЗМЕРНОСТЬ. Напр размерность день суперразмерность неделя. Функция частоты от 0 до 1. 
+ Считаем ее значение в начале каждого интервала суперразмерности
+ кол во точек которые надо оставить в интервале равно этой частоте умножить на кол во точек в интервале
+ эти точки раскидываем по интервалу равномерно начиная с заполненной точки и через равные промежутки
+ -в результате остается массив действующих точек. По нему считаем выдавать сообщение или нет. 
+ По нему же считаем ОБЪЕМ СЕТКИ = ОБЪЕМ ВРЕМЕНИ
+
  2. Величина нагрузки. Размерность величины. Считанм по ФОРМУЛЕ-ПОСЛЕДОВАТЕЛЬНОСТИ НАГРУЗКИ 
-*/
+ */
 var Gl_aCalendar=[
 	//===  значения колонок  ====
-	["id","name","period_description","period_type","period_formula","button_onclick"],
+	["id","parentid","globalsid","level","name","period_description","period_type","period_formula","button_onclick"],
 	//доступ по имени поля а не по индексу такой:  item[ Gl_aDeals[0].indexOf('name') ]
 	//!!! нужно делать доступ по имени поля чтобы всегда можно было добавить поля
-	["id","наименование дела","описание периодичности","объект с параметрами ритма","'функция выводить либо не выводить в тек. список'==''","функция вызова онлайн ритма, если нужно вывести в виде кнопки"],
+	["id","дело-родитель","поле для правильной сортировки в дереве(не заполнять,рассчитается в процессе)","уровень в дереве (не заполнять)","наименование дела","описание периодичности","объект с параметрами ритма","'функция выводить либо не выводить в тек. список'==''","функция вызова онлайн ритма, если нужно вывести в виде кнопки"],
 	//===========================
 
 	//workout
-	[1,"отжимания вниз головой","по понедельникам","{'volume':'100000','units':'раз','type': 'константа','datebeg':'01.01.2019','dateend':'01.01.2022','valuebeg':'10'}","GlDate.getDay()==1"],
-	[2,"подтягивания на одной руке", "по вторникам","","GlDate.getDay()==2"],
-	[3,"флаг", "по четвергам","","GlDate.getDay()==4"],
-	[4,"флаг", "по пятницам","","GlDate.getDay()==5"],
-	[5,"спичаги с брусьев на количество", "по субботам","","GlDate.getDay()==6"],
-	[6,"спичаги с рук на количество. ходьба на руках.","", "по воскресеньям","GlDate.getDay()==0"],
+	[1,0,0,0,"отжимания вниз головой","по понедельникам","{'volume':'100000','units':'раз','type': 'константа','datebeg':'01.01.2019','dateend':'01.01.2022','valuebeg':'10'}","GlDate.getDay()==1"],
+	[2,0,0,0,"подтягивания на одной руке", "по вторникам","","GlDate.getDay()==2"],
+	[3,0,0,0,"флаг", "по четвергам","","GlDate.getDay()==4"],
+	[4,0,0,0,"флаг", "по пятницам","","GlDate.getDay()==5"],
+	[5,0,0,0,"спичаги с брусьев на количество", "по субботам","","GlDate.getDay()==6"],
+	[6,0,0,0,"спичаги с рук на количество. ходьба на руках.","", "по воскресеньям","GlDate.getDay()==0"],
+    [7,0,0,0,"5 и 5 минут дриблинг с бросками. легкий бег либо ролики либо степ","утро раб. дня на удаленке","","(GlDate.getDay() in [1,2,4,5])&&(GlDate.getHours()<11 )"],
+    [8,0,0,0,"5 и 5 минут дриблинг с бросками. степ с резиной","вечер раб. дня на удаленке","","(GlDate.getDay() in [1,2,4,5])&&(GlDate.getHours()>11 )"],
 
 	//health and imp
-	[101,"'не есть до ' + switch (4){case 4: '17';case 6: '18';default: '19';}", "по средам","","GlDate.getDay()==3","alert('100500')"],
-    [102,"дых. в обед равномерно увелич по шагам", "","","true",],
-    
+	[101,0,0,0,"'не есть до ' + switch (4){case 4: '17';case 6: '18';default: '19';}", "по средам","","GlDate.getDay()==3","alert('100500')"],
+    [102,0,0,0,"дых. в обед равномерно увелич по шагам", "","","true",],
+
 	//imp
-	[100001,"6 мин из 60 стоп", "по выходным","","true",""],
-	
+	[100001,0,0,0,"6 мин из 60 стоп", "по выходным","","true",""],
+
 	//тест
-	//[1000001,"ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
+	[1000002,2,0,0,"222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
+	[1000003,8,0,0,"888 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
+    [1000004,2,0,0,"222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
+    [1000005,1000002,0,0,"потомок 222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
+
 
 ];
 
@@ -67,81 +73,139 @@ function resizeAll() {
 
 //основная функция. вывод списка текеущих дел
 function loadCurrentData() {
-	//var GltxtSpeek  = document.getElementById("idTextsToSpeek");
+
+	//!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	var nBlock = 10; //кол во цифр на блок одного ид
+	//!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+	//...
+	//...! СДЕЛАТЬ ПРОВЕРКУ УНИКАЛЬНОСТИ ИД И ПРОВЕРКУ НАЛИЧИЯ ССЫЛОК
+	// ... сделать проверку на длину ид не большн nBlock
+	//...
+
+
+    //расчет глобального номера в дереве
+	//к Ид элемента приписываем слева ид всех его родителей 
+	//(блоками по 20 символов дополненных слева нулями)
+    //параллельно считаем высоту дерева, 
+	//и при втором проходе дописываем справа блоки по 20 девяток у неконцевых вершин чтобы все номера были равной длины
+	var nTreeLen = 1;
+	for (var el in Gl_aCalendar)
+		if (el > 1) //заголовочную часть массива не меняем!
+		{
+			Gl_aCalendar[el][Gl_aCalendar[0].indexOf('globalsid')] = String(Gl_aCalendar[el][Gl_aCalendar[0].indexOf('id')]).padStart(nBlock, '0');
+			var pid = parseInt(Gl_aCalendar[el][Gl_aCalendar[0].indexOf('parentid')]);
+			var nLevel = 1;
+			while (pid > 0)
+			{
+				Gl_aCalendar[el][Gl_aCalendar[0].indexOf('globalsid')] = String(pid).padStart(nBlock, '0') + String(Gl_aCalendar[el][Gl_aCalendar[0].indexOf('globalsid')]).padStart(nBlock, '0');
+				try
+				{
+					pid = Gl_aCalendar
+						.filter(function(item, i, arr) {
+									try
+									{return parseInt(item[Gl_aCalendar[0].indexOf('id')]) == pid;} catch (e) {return false;};
+								})
+						[0][Gl_aCalendar[0].indexOf('parentid')];
+					nLevel += 1;
+					if (nLevel > nTreeLen) nTreeLen = nLevel;
+				} catch (e) {pid = -1;}
+			}
+			Gl_aCalendar[el][Gl_aCalendar[0].indexOf('level')] = nLevel;
+		}
+	for (var el in Gl_aCalendar)
+		if (el > 1) //заголовочную часть массива не меняем!
+			if (Gl_aCalendar[el][Gl_aCalendar[0].indexOf('globalsid')].length < nTreeLen * nBlock)
+				Gl_aCalendar[el][Gl_aCalendar[0].indexOf('globalsid')] = String(Gl_aCalendar[el][Gl_aCalendar[0].indexOf('globalsid')]).padEnd(nTreeLen * nBlock, '9');
+
 	var button  = document.getElementById("idStartBtn");
 	var GlDate = new Date();
 
+	var div = document.createElement("div");
+	div.innerHTML = "<ul>";
 	Gl_aCalendar
+
+	    //оставляем только необходимые на дату вывода дела
 		.filter(function(item, i, arr) { try
 					{ return eval(item[Gl_aCalendar[0].indexOf('period_formula')]) > 0;} catch (e) {return false;};})
+
+		//сортрируем по родителю и ид, чтобы вывести полностью раскрытый список-дерево
+		.sort(function(a, b) {if (String(a[Gl_aCalendar[0].indexOf('globalsid')]) > String(b[Gl_aCalendar[0].indexOf('globalsid')])) return -1; else return 1; 
+				  //  &&   (a[Gl_aCalendar[0].indexOf('id')]>b[Gl_aCalendar[0].indexOf('id')])
+				  ;})
 		.forEach(
 		function(item, i, arr) { 
-			//old GltxtSpeek.value += "" + (i+1) + ": " + ev(item[0]) + " - " + ev(item[1]) + "\n"
-			// Создаем элемент ДИВ
-			var div = document.createElement("div");
+
 			// Добавляем HTML-контент с пом. свойства innerHTML
-			div.innerHTML = '<li>' + ev(item[Gl_aCalendar[0].indexOf('name')]) + ' - ' + ev(item[Gl_aCalendar[0].indexOf('period_description')]);// + '</>';
+			div.innerHTML += '<li>' + String(" ").padStart(item[Gl_aCalendar[0].indexOf('level')] * 2, "_____")
+			    + String(nTreeLen) + ' - '
+				+ String(item[Gl_aCalendar[0].indexOf('level')]) + ' - '
+				+ String(item[Gl_aCalendar[0].indexOf('globalsid')]) + ' - '
+				+ ev(item[Gl_aCalendar[0].indexOf('name')]) 
+				+ ' - ' 
+				+ ev(item[Gl_aCalendar[0].indexOf('period_description')]);// + '</>';
 			if (!!item[Gl_aCalendar[0].indexOf('button_onclick')])  
 				if (item[Gl_aCalendar[0].indexOf('button_onclick')].trim().length > 0)
 					div.innerHTML += '<button ' + ' onclick="' + item[Gl_aCalendar[0].indexOf('button_onclick')] + '">Запустить</>';
-			div.innerHTML += '</li><p> </p><p> </p>';
-			// Добавляем новый узел в конец списка полей
-			document.getElementById("divInit").appendChild(div);
-
-			;});
+			div.innerHTML += '</li><p> ' + '</p><p> </p>';
+		});
+    div.innerHTML += "</ul>";
+	document.getElementById("divInit").appendChild(div);
 }  
 
 //калькулятор ритмов
-function startCalculator(){
-  //document.getElementById("divCalendar").removeChild();
-  if (!document.getElementById("divCalendar").hasChildNodes()){
-    var sSelectSetkaDimension = '<select><option disabled>Выберите размерность:</option><option value="час">час</option><option selected value="день">день</option><option value="неделя">неделя</option><option value="месяц">месяц</option><option value="год">год</option></select>';
-	
-    //
-    var div = document.createElement("div");
-    div.innerHTML = '<div>'  + 'Калькулятор ритма' + '\n</>';
-    document.getElementById("divCalendar").appendChild(div);
-	//
-	div = document.createElement("div");
-    div.innerHTML = '<li>'  + 'Настройка временной сетки' + '\n</>';
-    document.getElementById("divCalendar").appendChild(div);
-	//
-	div = document.createElement("div");
-    div.innerHTML = '<label>'  + 'Размерность сетки' + '\n</>';
-    document.getElementById("divCalendar").appendChild(div);
-	//
-	div = document.createElement("div");
-    div.innerHTML =sSelectSetkaDimension;
-	div = document.getElementById("divCalendar").appendChild(div);
-	//
-	div = document.createElement("div");
-    div.innerHTML = '<div>'  + 'Размерность отрезка разбинения (д.б. крупней размерности сетки, например "неделя" для размерности "день")' + '\n</>';
-    document.getElementById("divCalendar").appendChild(div);
-	// !сделать пред размерность плюс уровень выше
-	div = document.createElement("div");
-    div.innerHTML =sSelectSetkaDimension;
-	div = document.getElementById("divCalendar").appendChild(div);
-    //
-	div = document.createElement("div");
-    div.innerHTML ='<p>Дата начала периода: <input type="date" name="calendar">';
-	div = document.getElementById("divCalendar").appendChild(div);
-	//
-	div = document.createElement("div");
-    div.innerHTML ='<p>Дата окончания периода: <input type="date" name="calendar">';
-	div = document.getElementById("divCalendar").appendChild(div);
-	
-	//
-	//
-	div = document.createElement("div");
-    div.innerHTML = '<li>'  + 'Настройка ритма на сетке' + '\n</>';
-    document.getElementById("divCalendar").appendChild(div);
-	//
-	// ? не работает скрыть все..
-	div = document.createElement("div");
-    div.innerHTML = '<button onclick="document.getElementById("divCalendar").deleteData()">'  + 'Скрыть калькулятор' + '\n</>';
-    document.getElementById("divCalendar").appendChild(div);
-	//
-  }
+function startCalculator() {
+	//document.getElementById("divCalendar").removeChild();
+	if (!document.getElementById("divCalendar").hasChildNodes())
+	{
+		var sSelectSetkaDimension = '<select><option disabled>Выберите размерность:</option><option value="час">час</option><option selected value="день">день</option><option value="неделя">неделя</option><option value="месяц">месяц</option><option value="год">год</option></select>';
+
+		//
+		var div = document.createElement("div");
+		div.innerHTML = '<div>'  + 'Калькулятор ритма' + '\n</>';
+		document.getElementById("divCalendar").appendChild(div);
+		//
+		div = document.createElement("div");
+		div.innerHTML = '<li>'  + 'Настройка временной сетки' + '\n</>';
+		document.getElementById("divCalendar").appendChild(div);
+		//
+		div = document.createElement("div");
+		div.innerHTML = '<label>'  + 'Размерность сетки' + '\n</>';
+		document.getElementById("divCalendar").appendChild(div);
+		//
+		div = document.createElement("div");
+		div.innerHTML = sSelectSetkaDimension;
+		div = document.getElementById("divCalendar").appendChild(div);
+		//
+		div = document.createElement("div");
+		div.innerHTML = '<div>'  + 'Размерность отрезка разбинения (д.б. крупней размерности сетки, например "неделя" для размерности "день")' + '\n</>';
+		document.getElementById("divCalendar").appendChild(div);
+		// !сделать пред размерность плюс уровень выше
+		div = document.createElement("div");
+		div.innerHTML = sSelectSetkaDimension;
+		div = document.getElementById("divCalendar").appendChild(div);
+		//
+		div = document.createElement("div");
+		div.innerHTML = '<p>Дата начала периода: <input type="date" name="calendar">';
+		div = document.getElementById("divCalendar").appendChild(div);
+		//
+		div = document.createElement("div");
+		div.innerHTML = '<p>Дата окончания периода: <input type="date" name="calendar">';
+		div = document.getElementById("divCalendar").appendChild(div);
+
+		//
+		//
+		div = document.createElement("div");
+		div.innerHTML = '<li>'  + 'Настройка ритма на сетке' + '\n</>';
+		document.getElementById("divCalendar").appendChild(div);
+		//
+		// ? не работает скрыть все..
+		div = document.createElement("div");
+		div.innerHTML = '<button onclick="document.getElementById("divCalendar").deleteData()">'  + 'Скрыть калькулятор' + '\n</>';
+		document.getElementById("divCalendar").appendChild(div);
+		//
+	}
 }
 </script>
 
