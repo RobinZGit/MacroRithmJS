@@ -50,11 +50,12 @@ var Gl_aCalendar=[
 	[100001,0,0,0,"6 мин из 60 стоп", "по выходным","","true",""],
 
 	//тест
+	/*
 	[1000002,2,0,0,"222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
 	[1000003,8,0,0,"888 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
     [1000004,2,0,0,"222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
     [1000005,1000002,0,0,"потомок 222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
-
+    */
 
 ];
 
@@ -75,14 +76,39 @@ function resizeAll() {
 function loadCurrentData() {
 
 	//!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	var nBlock = 10; //кол во цифр на блок одного ид
+	var nBlock = 10; //кол во цифр на блок одного ид.  ид дб строго меньше nBlock
 	//!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+	//проверки целостности б.д.
+	Gl_aCalendar.forEach(
+	function(item, i, arr) { 
+	  if (i>1){
+	    //error 1
+	    if (String(item[Gl_aCalendar[0].indexOf('id')]).length >= nBlock)
+		  alert("Error 1: Превышение максимальной длины поля id = " + String(item[Gl_aCalendar[0].indexOf('id')])
+			       + ". Внесите изменения в данные. id должен быть не длиннее " + (nBlock - 1)+ " символов.");     	
 
-	//...
-	//...! СДЕЛАТЬ ПРОВЕРКУ УНИКАЛЬНОСТИ ИД И ПРОВЕРКУ НАЛИЧИЯ ССЫЛОК
-	// ... сделать проверку на длину ид не большн nBlock
-	//...
+	    //error 2
+	    for(j=i+1;j<Gl_aCalendar.length;j++)
+	      if (item[Gl_aCalendar[0].indexOf('id')]==
+		      Gl_aCalendar[j][Gl_aCalendar[0].indexOf('id')])
+		    alert("Error 2: Найдено более одного элемента с id = "+item[Gl_aCalendar[0].indexOf('id')]
+			       + ". Внесите изменения в данные. id должен быть уникальным");     
+		
+		//error 3
+		var currPar = item[Gl_aCalendar[0].indexOf('parentid')];
+		if (currPar>0)
+		  if (Gl_aCalendar
+		      .filter(function(item1, i1, arr1) {
+			          return currPar==item1[Gl_aCalendar[0].indexOf('id')];}
+			  )
+			  .length==0)
+		    alert("Error 3: Не найдено элемента по ссылке parentid = "+item[Gl_aCalendar[0].indexOf('parentid')]
+			       + ". Внесите изменения в данные. Данному значению должен соответствовать один элемент (его id должен быть равен указанному parentid)");     
+	 
+	  }		
+		   
+	});
 
 
     //расчет глобального номера в дереве
@@ -130,7 +156,7 @@ function loadCurrentData() {
 		.filter(function(item, i, arr) { try
 					{ return eval(item[Gl_aCalendar[0].indexOf('period_formula')]) > 0;} catch (e) {return false;};})
 
-		//сортрируем по родителю и ид, чтобы вывести полностью раскрытый список-дерево
+		//сортрируем по globalsid, чтобы вывести полностью раскрытый список-дерево
 		.sort(function(a, b) {if (String(a[Gl_aCalendar[0].indexOf('globalsid')]) > String(b[Gl_aCalendar[0].indexOf('globalsid')])) return -1; else return 1; 
 				  //  &&   (a[Gl_aCalendar[0].indexOf('id')]>b[Gl_aCalendar[0].indexOf('id')])
 				  ;})
