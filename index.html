@@ -49,15 +49,90 @@ var Gl_aCalendar=[
 	//imp
 	[100001,0,0,0,"6 мин из 60 стоп", "по выходным","","true",""],
 
-	//тест
+	//тест 
 	/*
-	[1000002,2,0,0,"222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
-	[1000003,8,0,0,"888 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
-    [1000004,2,0,0,"222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
-    [1000005,1000002,0,0,"потомок 222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
-    */
+	 [1000002,2,0,0,"222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
+	 [1000003,8,0,0,"888 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
+	 [1000004,2,0,0,"222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
+	 [1000005,1000003,0,0,"потомок 222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
+	 */
 
 ];
+
+//основной объект - бд и методы
+var glOcalendar =
+{table:Gl_aCalendar,
+	blockLen:10, //кол во цифр на блок одного ид.  ид дб строго меньше blockLen
+	treeLen:1,   //высота дерева, расчитывается в calcSortFields
+	check:function() { //проверка целостности бд
+        this.table.forEach(
+			function(item, i, arr) { 
+				if (i > 1)
+				{
+					//error 1
+					if (String(item[arr[0].indexOf('id')]).length >= glOcalendar.blockLen)  //!не видит this.blockLen
+						alert("Error 1: Превышение максимальной длины поля id = " + String(item[arr[0].indexOf('id')])
+							  + ". Внесите изменения в данные. id должен быть не длиннее " + (glOcalendar.blockLen - 1) + " символов.");     	
+
+					//error 2
+					for (j = i + 1;j < arr.length;j++)
+						if (item[arr[0].indexOf('id')] ==
+							arr[j][arr[0].indexOf('id')])
+							alert("Error 2: Найдено более одного элемента с id = " + item[arr[0].indexOf('id')]
+								  + ". Внесите изменения в данные. id должен быть уникальным");     
+
+					//error 3
+					var currPar = item[arr[0].indexOf('parentid')];
+					if (currPar > 0)
+						if (arr
+							.filter(function(item1, i1, arr1) {
+										return currPar == item1[arr[0].indexOf('id')];}
+									)
+							.length == 0)
+							alert("Error 3: Не найдено элемента по ссылке parentid = " + item[arr[0].indexOf('parentid')]
+								  + ". Внесите изменения в данные. Данному значению должен соответствовать один элемент (его id должен быть равен указанному parentid)");     
+
+				}		
+
+			});
+	},
+	calcSortFields:function() {
+	    //расчет глобального номера в дереве
+		//к Ид элемента приписываем слева ид всех его родителей 
+		//(блоками по 20 символов дополненных слева нулями)
+		//параллельно считаем высоту дерева, 
+		//и при втором проходе дописываем справа блоки по blockLen девяток у неконцевых вершин чтобы все номера были равной длины
+		this.treeLen = 1;
+		for (var el in this.table)
+			if (el > 1) //заголовочную часть массива не меняем!
+			{
+				this.table[el][this.table[0].indexOf('globalsid')] = String(this.table[el][this.table[0].indexOf('id')]).padStart(this.blockLen, '0');
+				var pid = parseInt(this.table[el][this.table[0].indexOf('parentid')]);
+				var nLevel0 = 1;
+				while (pid > 0)
+				{
+					this.table[el][this.table[0].indexOf('globalsid')] = String(pid).padStart(this.blockLen, '0') + String(this.table[el][this.table[0].indexOf('globalsid')]).padStart(this.blockLen, '0');
+					try
+					{
+						pid = this.table
+							.filter(function(item, i, arr) {
+										try
+										{return parseInt(item[arr[0].indexOf('id')]) == pid;} catch (e) {return false;};
+									})
+							[0][this.table[0].indexOf('parentid')];
+						nLevel0 += 1;
+						if (nLevel0 > this.treeLen) this.treeLen  = nLevel0;
+					} catch (e) {pid = -1;}
+				}
+				this.table[el][this.table[0].indexOf('level')] = nLevel0;
+			}
+		for (var el in this.table)
+			if (el > 1) //заголовочную часть массива не меняем!
+				if (this.table[el][this.table[0].indexOf('globalsid')].length < this.treeLen * this.blockLen)
+					this.table[el][this.table[0].indexOf('globalsid')] = String(this.table[el][this.table[0].indexOf('globalsid')]).padEnd(this.treeLen * this.blockLen, '9');
+//
+	}
+};
 
 //пытаемся вычислить строку как формулу. если не получается оставляем строку как есть
 function ev(s) {
@@ -75,112 +150,57 @@ function resizeAll() {
 //основная функция. вывод списка текеущих дел
 function loadCurrentData() {
 
-	//!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	var nBlock = 10; //кол во цифр на блок одного ид.  ид дб строго меньше nBlock
-	//!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	//проверки целостности б.д.
-	Gl_aCalendar.forEach(
-	function(item, i, arr) { 
-	  if (i>1){
-	    //error 1
-	    if (String(item[Gl_aCalendar[0].indexOf('id')]).length >= nBlock)
-		  alert("Error 1: Превышение максимальной длины поля id = " + String(item[Gl_aCalendar[0].indexOf('id')])
-			       + ". Внесите изменения в данные. id должен быть не длиннее " + (nBlock - 1)+ " символов.");     	
+	glOcalendar.check();
 
-	    //error 2
-	    for(j=i+1;j<Gl_aCalendar.length;j++)
-	      if (item[Gl_aCalendar[0].indexOf('id')]==
-		      Gl_aCalendar[j][Gl_aCalendar[0].indexOf('id')])
-		    alert("Error 2: Найдено более одного элемента с id = "+item[Gl_aCalendar[0].indexOf('id')]
-			       + ". Внесите изменения в данные. id должен быть уникальным");     
-		
-		//error 3
-		var currPar = item[Gl_aCalendar[0].indexOf('parentid')];
-		if (currPar>0)
-		  if (Gl_aCalendar
-		      .filter(function(item1, i1, arr1) {
-			          return currPar==item1[Gl_aCalendar[0].indexOf('id')];}
-			  )
-			  .length==0)
-		    alert("Error 3: Не найдено элемента по ссылке parentid = "+item[Gl_aCalendar[0].indexOf('parentid')]
-			       + ". Внесите изменения в данные. Данному значению должен соответствовать один элемент (его id должен быть равен указанному parentid)");     
-	 
-	  }		
-		   
-	});
+	//нумерация с учетом иерархии
+	glOcalendar.calcSortFields();
 
 
-    //расчет глобального номера в дереве
-	//к Ид элемента приписываем слева ид всех его родителей 
-	//(блоками по 20 символов дополненных слева нулями)
-    //параллельно считаем высоту дерева, 
-	//и при втором проходе дописываем справа блоки по 20 девяток у неконцевых вершин чтобы все номера были равной длины
-	var nTreeLen = 1;
-	for (var el in Gl_aCalendar)
-		if (el > 1) //заголовочную часть массива не меняем!
-		{
-			Gl_aCalendar[el][Gl_aCalendar[0].indexOf('globalsid')] = String(Gl_aCalendar[el][Gl_aCalendar[0].indexOf('id')]).padStart(nBlock, '0');
-			var pid = parseInt(Gl_aCalendar[el][Gl_aCalendar[0].indexOf('parentid')]);
-			var nLevel = 1;
-			while (pid > 0)
-			{
-				Gl_aCalendar[el][Gl_aCalendar[0].indexOf('globalsid')] = String(pid).padStart(nBlock, '0') + String(Gl_aCalendar[el][Gl_aCalendar[0].indexOf('globalsid')]).padStart(nBlock, '0');
-				try
-				{
-					pid = Gl_aCalendar
-						.filter(function(item, i, arr) {
-									try
-									{return parseInt(item[Gl_aCalendar[0].indexOf('id')]) == pid;} catch (e) {return false;};
-								})
-						[0][Gl_aCalendar[0].indexOf('parentid')];
-					nLevel += 1;
-					if (nLevel > nTreeLen) nTreeLen = nLevel;
-				} catch (e) {pid = -1;}
-			}
-			Gl_aCalendar[el][Gl_aCalendar[0].indexOf('level')] = nLevel;
-		}
-	for (var el in Gl_aCalendar)
-		if (el > 1) //заголовочную часть массива не меняем!
-			if (Gl_aCalendar[el][Gl_aCalendar[0].indexOf('globalsid')].length < nTreeLen * nBlock)
-				Gl_aCalendar[el][Gl_aCalendar[0].indexOf('globalsid')] = String(Gl_aCalendar[el][Gl_aCalendar[0].indexOf('globalsid')]).padEnd(nTreeLen * nBlock, '9');
-
-	var button  = document.getElementById("idStartBtn");
 	var GlDate = new Date();
-
 	var div = document.createElement("div");
 	div.innerHTML = "<ul>";
-	Gl_aCalendar
+	glOcalendar.table
 
 	    //оставляем только необходимые на дату вывода дела
 		.filter(function(item, i, arr) { try
-					{ return eval(item[Gl_aCalendar[0].indexOf('period_formula')]) > 0;} catch (e) {return false;};})
+					{ return eval(item[arr[0].indexOf('period_formula')]) > 0;} catch (e) {return false;};})
 
 		//сортрируем по globalsid, чтобы вывести полностью раскрытый список-дерево
 		.sort(function(a, b) {if (String(a[Gl_aCalendar[0].indexOf('globalsid')]) > String(b[Gl_aCalendar[0].indexOf('globalsid')])) return -1; else return 1; 
-				  //  &&   (a[Gl_aCalendar[0].indexOf('id')]>b[Gl_aCalendar[0].indexOf('id')])
 				  ;})
 		.forEach(
 		function(item, i, arr) { 
 
 			// Добавляем HTML-контент с пом. свойства innerHTML
-			div.innerHTML += '<li>' + String(" ").padStart(item[Gl_aCalendar[0].indexOf('level')] * 2, "_____")
-			    + String(nTreeLen) + ' - '
-				+ String(item[Gl_aCalendar[0].indexOf('level')]) + ' - '
-				+ String(item[Gl_aCalendar[0].indexOf('globalsid')]) + ' - '
-				+ ev(item[Gl_aCalendar[0].indexOf('name')]) 
+			div.innerHTML += '<li style="visibility:inherited;font-size:'
+				//уменьшение шрифта для подуровней
+				+ (300 / (2 + item[glOcalendar.table[0].indexOf('level')])) + '%">' 
+				//отступ для подуровней
+				+ String(" ").padStart((item[glOcalendar.table[0].indexOf('level')] - 1) * 10, "..........")
+			    //+ String(glOcalendar.treeLen) + ' - '
+				//+ String(item[glOcalendar.table[0].indexOf('level')]) + ' - '
+				//+ String(item[glOcalendar.table[0].indexOf('globalsid')]) + ' - '
+				+ ev(item[glOcalendar.table[0].indexOf('name')]) 
 				+ ' - ' 
-				+ ev(item[Gl_aCalendar[0].indexOf('period_description')]);// + '</>';
-			if (!!item[Gl_aCalendar[0].indexOf('button_onclick')])  
-				if (item[Gl_aCalendar[0].indexOf('button_onclick')].trim().length > 0)
-					div.innerHTML += '<button ' + ' onclick="' + item[Gl_aCalendar[0].indexOf('button_onclick')] + '">Запустить</>';
+				+ ev(item[glOcalendar.table[0].indexOf('period_description')]);// + '</>';
+			if (!!item[glOcalendar.table[0].indexOf('button_onclick')])  
+				if (item[glOcalendar.table[0].indexOf('button_onclick')].trim().length > 0)
+					div.innerHTML += '<button ' + ' onclick="' + item[glOcalendar.table[0].indexOf('button_onclick')] + '">Запустить</>';
 			div.innerHTML += '</li><p> ' + '</p><p> </p>';
 		});
     div.innerHTML += "</ul>";
 	document.getElementById("divInit").appendChild(div);
 }  
 
+
+
+
+
+//================================================
 //калькулятор ритмов
+var button  = document.getElementById("idStartBtn");
 function startCalculator() {
 	//document.getElementById("divCalendar").removeChild();
 	if (!document.getElementById("divCalendar").hasChildNodes())
@@ -239,7 +259,7 @@ function startCalculator() {
   </head>
   <body onload="loadCurrentData()" onresize = "resizeAll()" style="color: #633366; font-size:250%">
 	<h3 class="bg-primary p-a-1">Текущие дела: </h3>
-	<div id = "divInit" style="color: #633366; font-size:90%"></div>
+	<div id="divInit" style="display:1;visibility:visible;color:#633366; font-size:90%"></div>
 	<!--
 	<p>
 	<textarea id = "idTextsToSpeek" style = "width:600px;height:400px"></textarea>
