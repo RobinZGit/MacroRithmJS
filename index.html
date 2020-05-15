@@ -54,8 +54,8 @@ var DATABASE_aCalendar=[
 	 [1000002,2,0,0,"222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
 	 [1000003,8,0,0,"888 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
 	 [1000004,2,0,0,"222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
-	 [1000005,1000003,0,0,"потомок 222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
-	 */
+	 [1000005,1000002,0,0,"потомок 222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
+	*/
 
 ];
 
@@ -185,7 +185,7 @@ var glOcalendar =
 		return sHTML;
 	},
 
-	
+
     //список текущих дел
 	innerHTMLexpandedTreeCurrent: function() {
 		return this.innerHTMLexpandedTree(1);
@@ -225,9 +225,13 @@ function loadCurrentData() {
 	//выводим список текущих дел
 	var div = document.createElement("div");
 	div.innerHTML =  glOcalendar.innerHTMLexpandedTreeCurrent();
-	document.getElementById("divInit").appendChild(div);
-	
-	
+	document.getElementById("txt_1").appendChild(div);
+
+	//выводим список всех дел
+	var div = document.createElement("div");
+	div.innerHTML =  glOcalendar.innerHTMLexpandedTreeAll();
+	document.getElementById("txt_2").appendChild(div);
+
 }  
 
 
@@ -297,18 +301,85 @@ function loadCurrentData() {
 
   </head>
   <body onload="loadCurrentData()" onresize = "resizeAll()" style="color: #633366; font-size:250%">
-	<h3 class="bg-primary p-a-1">Текущие дела: </h3>
-	<div id="divInit" style="display:1;visibility:visible;color:#633366; font-size:90%"></div>
-	<!--
+	<h3 class="bg-primary p-a-1">Календарь: </h3>
+<!-- <div id="divInit" style="display:1;visibility:visible;color:#633366; font-size:90%"></div>
+	
 	<p>
 	<textarea id = "idTextsToSpeek" style = "width:600px;height:400px"></textarea>
 	</p>
-	-->
+	
 	<p></p>
 	<p></p>
 	<p>
 	  <button id = "idCalculator" style = "width:200px;height:30px" onclick="startCalculator()" >Калькулятор ритмов</button>
 	</p>
 	<div id = "divCalendar" style="color: #333366; font-size:100%"></div>
+-->
+<style type="text/css">
+.tabs { width: 100%; padding: 0px; margin: 0 auto; }
+.tabs>input { display: none; }
+.tabs>div {
+    display: none;
+    padding: 12px;
+    border: 1px solid #C0C0C0;
+    background: #FFFFFF;
+}
+.tabs>label {
+    display: inline-block;
+    padding: 7px;
+    margin: 0 -5px -1px 0;
+    text-align: center;
+    color: #666666;
+    border: 1px solid #C0C0C0;
+    background: #E0E0E0;
+    cursor: pointer;
+}
+.tabs>input:checked + label {
+    color: #000000;
+    border: 1px solid #C0C0C0;
+    border-bottom: 1px solid #FFFFFF;
+    background: #FFFFFF;
+}
+#tab_1:checked ~ #txt_1,
+#tab_2:checked ~ #txt_2,
+#tab_3:checked ~ #txt_3,
+#tab_4:checked ~ #txt_4 { display: block; }
+</style>
+
+	<div class="tabs">
+	  <input type="radio" name="inset" value="" id="tab_1" checked>
+	  <label for="tab_1">Текущие дела</label>
+
+	  <input type="radio" name="inset" value="" id="tab_2">
+	  <label for="tab_2">Все дела</label>
+<!--
+	  <input type="radio" name="inset" value="" id="tab_3">
+	  <label for="tab_3">Вкладка №3</label>
+
+	  <input type="radio" name="inset" value="" id="tab_4">
+	  <label for="tab_4">Вкладка №4</label>
+-->
+	  <div id="txt_1">
+<!--
+        <p>Произвольное содержимое...</p>
+        <p>Произвольное содержимое...</p>
+        <p>Произвольное содержимое...</p>
+-->
+	  </div>
+	  <div id="txt_2">
+<!--        <p>Вторая вкладка</p>   -->
+	  </div>
+<!--
+	  <div id="txt_3">
+        <p>Размеры содержимого вкладок</p>
+        <p>могут отличаться по высоте!</p>
+	  </div>
+	  <div id="txt_4">
+        <img src="image/logo.png" width="533" height="77" alt="Лого">
+	  </div>
+-->
+	</div>
+
+
   </body>
 </html>
