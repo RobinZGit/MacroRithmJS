@@ -26,35 +26,47 @@
  */
 var DATABASE_aCalendar=[
 	//===  значения колонок  ====
-	["id","parentid","globalsid","level","name","period_description","period_type","period_formula","button_onclick"],
+	["id","parentid","globalsid","level","formula","popravka","dimension","name","period_description","period_formula","button_onclick"],
 	//доступ по имени поля а не по индексу такой:  item[ Gl_aDeals[0].indexOf('name') ]
 	//!!! нужно делать доступ по имени поля чтобы всегда можно было добавить поля
-	["id","дело-родитель","поле для правильной сортировки в дереве(не заполнять,рассчитается в процессе)","уровень в дереве (не заполнять)","наименование дела","описание периодичности","объект с параметрами ритма","'функция выводить либо не выводить в тек. список'==''","функция вызова онлайн ритма, если нужно вывести в виде кнопки"],
+	["id"
+	 ,"дело-родитель"
+	 ,"поле для правильной сортировки в дереве(не заполнять,рассчитается в процессе)"
+	 ,"уровень в дереве (не заполнять)"
+	 ,"формула нагрузки дела"
+	 ,"поправка к формуле. например формула - линейный ритм, а поправка - синусоидальный множитель или добавок "
+	 ,"размерность нагрузки"
+	 ,"наименование дела"
+	 ,"описание периодичности"
+	 ,"'функция выводить либо не выводить в тек. список'==''"
+	 ,"функция вызова онлайн ритма, если нужно вывести в виде кнопки"
+	],
 	//===========================
 
 	//workout
-	[1,0,0,0,"отжимания вниз головой","по понедельникам","{'volume':'100000','units':'раз','type': 'константа','datebeg':'01.01.2019','dateend':'01.01.2022','valuebeg':'10'}","glOcalendar.currDate.getDay()==1"],
-	[2,0,0,0,"подтягивания на одной руке", "по вторникам","","glOcalendar.currDate.getDay()==2"],
-	[3,0,0,0,"флаг", "по четвергам","","glOcalendar.currDate.getDay()==4"],
-	[4,0,0,0,"флаг", "по пятницам","","glOcalendar.currDate.getDay()==5"],
-	[5,0,0,0,"спичаги с брусьев на количество", "по субботам","","glOcalendar.currDate.getDay()==6"],
-	[6,0,0,0,"спичаги с рук на количество. ходьба на руках.","", "по воскресеньям","glOcalendar.currDate.getDay()==0"],
-    [7,0,0,0,"5 и 5 минут дриблинг с бросками. легкий бег либо ролики либо степ","утро раб. дня на удаленке","","(glOcalendar.currDate.getDay() in [1,2,4,5])&&(glOcalendar.currDate.getHours()<11 )"],
-    [8,0,0,0,"5 и 5 минут дриблинг с бросками. степ с резиной","вечер раб. дня на удаленке","","(glOcalendar.currDate.getDay() in [1,2,4,5])&&(glOcalendar.currDate.getHours()>11 )"],
+	[1,0,0,0,"","","","отжимания вниз головой","по понедельникам","glOcalendar.currDate.getDay()==1"],
+	
+	[2,0,0,0,"","","","подтягивания на одной руке", "по вторникам","glOcalendar.currDate.getDay()==2"],
+	[3,0,0,0,"","","","флаг", "по четвергам","glOcalendar.currDate.getDay()==4"],
+	[4,0,0,0,"","","","флаг", "по пятницам","glOcalendar.currDate.getDay()==5"],
+	[5,0,0,0,"","","","спичаги с брусьев на количество", "по субботам","glOcalendar.currDate.getDay()==6"],
+	[6,0,0,0,"","","","спичаги с рук на количество. ходьба на руках.", "по воскресеньям","glOcalendar.currDate.getDay()==0"],
+    [7,0,0,0,"","","","5 и 5 минут дриблинг с бросками. легкий бег либо ролики либо степ","утро раб. дня на удаленке","(glOcalendar.currDate.getDay() in [1,2,4,5])&&(glOcalendar.currDate.getHours()<11 )"],
+    [8,0,0,0,"","","","5 и 5 минут дриблинг с бросками. степ с резиной","вечер раб. дня на удаленке","(glOcalendar.currDate.getDay() in [1,2,4,5])&&(glOcalendar.currDate.getHours()>11 )"],
 
 	//health and imp
-	[101,0,0,0,"'не есть до ' + switch (4){case 4: '17';case 6: '18';default: '19';}", "по средам","","glOcalendar.currDate.getDay()==3","alert('100500')"],
-    [102,0,0,0,"дых. в обед равномерно увелич по шагам", "","","true",],
+	[101,0,0,0,"","","","'не есть до ' + switch (4){case 4: '17';case 6: '18';default: '19';}", "по средам","glOcalendar.currDate.getDay()==3","alert('100500')"],
+    [102,0,0,0,"Math.round((25/3.1415)*Math.atan(glOcalendar.currDate.getTime() / (1000*60 *60 *24) ))","+Math.round(Math.sin(glOcalendar.currDate.getDay()))","раз(вдох и столько же выдох)","дых. в обед равномерно увелич по шагам","","true",],
 
 	//imp
-	[100001,0,0,0,"6 мин из 60 стоп", "по выходным","","true",""],
+	[100001,0,0,0,"","","","6 мин из 60 стоп", "по выходным","true",""],
 
 	//тест 
 	/*
-	 [1000002,2,0,0,"222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
-	 [1000003,8,0,0,"888 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
-	 [1000004,2,0,0,"222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
-	 [1000005,1000002,0,0,"потомок 222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
+	 [1000002,2,0,0,"","","222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
+	 [1000003,8,0,0,"","","888 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
+	 [1000004,2,0,0,"","","222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
+	 [1000005,1000002,"","",0,0,"потомок 222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
 	*/
 
 ];
@@ -67,7 +79,7 @@ var glOcalendar =
 	//
 	blockLen:10, //кол во цифр на блок одного ид.  ид дб строго меньше blockLen
 	treeLen:1,   //высота дерева, расчитывается в calcSortFields
-
+    zagolovokRows:2, //количество строк в бд для описания наименований, типов и пр
 
 	check:function() { //проверка целостности бд
         this.table.forEach(
@@ -111,7 +123,7 @@ var glOcalendar =
 		//и при втором проходе дописываем справа блоки по blockLen девяток у неконцевых вершин чтобы все номера были равной длины
 		this.treeLen = 1;
 		for (var el in this.table)
-			if (el > 1) //заголовочную часть массива не меняем!
+			if (el > this.zagolovokRows-1) //заголовочную часть массива не меняем!
 			{
 				this.table[el][this.table[0].indexOf('globalsid')] = String(this.table[el][this.table[0].indexOf('id')]).padStart(this.blockLen, '0');
 				var pid = parseInt(this.table[el][this.table[0].indexOf('parentid')]);
@@ -134,7 +146,7 @@ var glOcalendar =
 				this.table[el][this.table[0].indexOf('level')] = nLevel0;
 			}
 		for (var el in this.table)
-			if (el > 1) //заголовочную часть массива не меняем!
+			if (el > this.zagolovokRows-1) //заголовочную часть массива не меняем!
 				if (this.table[el][this.table[0].indexOf('globalsid')].length < this.treeLen * this.blockLen)
 					this.table[el][this.table[0].indexOf('globalsid')] = String(this.table[el][this.table[0].indexOf('globalsid')]).padEnd(this.treeLen * this.blockLen, '9');
 //
@@ -153,7 +165,7 @@ var glOcalendar =
 						switch (nMode)
 						{
 							case 0:
-								return true;
+								return (i>(glOcalendar.zagolovokRows-1));
 							case 1:
 								try
 								{ 
@@ -173,8 +185,10 @@ var glOcalendar =
 					+ (300 / (2 + item[glOcalendar.table[0].indexOf('level')])) + '%">' 
 					//отступ для подуровней
 					+ String(" ").padStart((item[glOcalendar.table[0].indexOf('level')] - 1) * 10, "..........")
-					+ ev(item[glOcalendar.table[0].indexOf('name')]) 
-					+ ' - ' 
+					+ (item[glOcalendar.table[0].indexOf('name')]) 
+					+ ((String(item[glOcalendar.table[0].indexOf('formula')]).length==0)?"":(".   Средняя нагрузка: " + ev(item[glOcalendar.table[0].indexOf('formula')])  + " " + (item[glOcalendar.table[0].indexOf('dimension')])  ))
+					+ ((String(item[glOcalendar.table[0].indexOf('popravka')]).length==0)?"":(".   Рекомендуемая нагрузка с учетом поправки: " + ev(item[glOcalendar.table[0].indexOf('formula')] + item[glOcalendar.table[0].indexOf('popravka')]) + " " + (item[glOcalendar.table[0].indexOf('dimension')]) ))
+					+ '   ' 
 					+ ev(item[glOcalendar.table[0].indexOf('period_description')]);// + '</>';
 				if (!!item[glOcalendar.table[0].indexOf('button_onclick')])  
 					if (item[glOcalendar.table[0].indexOf('button_onclick')].trim().length > 0)
