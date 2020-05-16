@@ -24,39 +24,46 @@
 
  2. Величина нагрузки. Размерность величины. Считанм по ФОРМУЛЕ-ПОСЛЕДОВАТЕЛЬНОСТИ НАГРУЗКИ 
  */
+
+
+
+//============================================================ 
+//============================================================ 
+//============================================================ 
+//============================================================ 
 var DATABASE_aCalendar=[
 	//===  значения колонок  ====
 	["id"
-	 ,"parentid"
-	 ,"globalsid"
-	 ,"level"
-	 ,"formula"
-	 ,"popravka"
-	 ,"dimension"
-	 ,"name"
-	 ,"period_description"
-	 ,"period_formula"
-	 ,"button_onclick"
+		,"parentid"
+		,"globalsid"
+		,"level"
+		,"formula"
+		,"popravka"
+		,"dimension"
+		,"name"
+		,"period_description"
+		,"period_formula"
+		,"button_onclick"
 	],
 	//доступ по имени поля а не по индексу такой:  item[ Gl_aDeals[0].indexOf('name') ]
 	//!!! нужно делать доступ по имени поля чтобы всегда можно было добавить поля
 	["id"
-	 ,"дело-родитель"
-	 ,"поле для правильной сортировки в дереве(не заполнять,рассчитается в процессе)"
-	 ,"уровень в дереве (не заполнять)"
-	 ,"формула нагрузки дела"
-	 ,"поправка к формуле. например формула - линейный ритм, а поправка - синусоидальный множитель или добавок "
-	 ,"размерность нагрузки"
-	 ,"наименование дела"
-	 ,"описание периодичности"
-	 ,"'функция выводить либо не выводить в тек. список'==''"
-	 ,"функция вызова онлайн ритма, если нужно вывести в виде кнопки"
+		,"дело-родитель"
+		,"поле для правильной сортировки в дереве(не заполнять,рассчитается в процессе)"
+		,"уровень в дереве (не заполнять)"
+		,"формула нагрузки дела"
+		,"поправка к формуле. например формула - линейный ритм, а поправка - синусоидальный множитель или добавок "
+		,"размерность нагрузки"
+		,"наименование дела"
+		,"описание периодичности"
+		,"'функция выводить либо не выводить в тек. список'==''"
+		,"функция вызова онлайн ритма, если нужно вывести в виде кнопки"
 	],
 	//===========================
 
 	//workout
 	[1,0,0,0,"","","","отжимания вниз головой","по понедельникам","glOcalendar.currDate.getDay()==1"],
-	
+
 	[2,0,0,0,"","","","подтягивания на одной руке", "по вторникам","glOcalendar.currDate.getDay()==2"],
 	[3,0,0,0,"","","","флаг", "по четвергам","glOcalendar.currDate.getDay()==4"],
 	[4,0,0,0,"","","","флаг", "по пятницам","glOcalendar.currDate.getDay()==5"],
@@ -67,7 +74,10 @@ var DATABASE_aCalendar=[
 
 	//health and imp
 	[101,0,0,0,"switch (4){case 4: '17';case 6: '18';default: '19';}",""," часов дня","не есть до", "по средам","glOcalendar.currDate.getDay()==3","alert('100500')"],
-    [102,0,0,0,"Math.round((glOcalendar.currDate.getFullYear()<2021 ? (20*(glOcalendar.currDate.getFullYear()*10000 +glOcalendar.currDate.getMonth()*100 +glOcalendar.currDate.getDate()-20200101)/(20200612-20200101)): 20))","+Math.round(Math.atan(glOcalendar.currDate.getDate()))","раз(вдох и столько же выдох)","дых. в обед равномерно увелич по шагам","","true",],
+    //[102,0,0,0,"Math.round((glOcalendar.currDate.getFullYear()<2021 ? (20*(glOcalendar.currDate.getFullYear()*10000 +glOcalendar.currDate.getMonth()*100 +glOcalendar.currDate.getDate()-20200101)/(20200612-20200101)): 20))","+Math.round(Math.atan(glOcalendar.currDate.getDate()))","раз(вдох и столько же выдох)","дых. в обед равномерно увелич по шагам","","true",],
+    [102,0,0,0,"Math.round(glOcalendar.rithmLinear(glOcalendar.toNum(glOcalendar.currDate,'date'),{x:20200101,y:12},{x:20211212,y:20}))"
+		,"+Math.round((glOcalendar.rithmSin(glOcalendar.toNum(glOcalendar.currDate,'date'),20200101,20200128,2,0,4)))"
+		,"раз(вдох и столько же выдох)","дых. в обед равномерно увелич по шагам","","true",],
 
 	//imp
 	[100001,0,0,0,"","","","6 мин из 60 стоп", "по выходным","true",""],
@@ -78,9 +88,15 @@ var DATABASE_aCalendar=[
 	 [1000003,8,0,0,"","","888 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
 	 [1000004,2,0,0,"","","222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
 	 [1000005,1000002,"","",0,0,"потомок 222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
-	*/
+	 */
 
 ];
+//============================================================ 
+//============================================================ 
+//============================================================ 
+//============================================================ 
+
+
 
 //основной объект - бд и методы
 var glOcalendar =
@@ -91,8 +107,36 @@ var glOcalendar =
 	blockLen:10, //кол во цифр на блок одного ид.  ид дб строго меньше blockLen
 	treeLen:1,   //высота дерева, расчитывается в calcSortFields
     zagolovokRows:2, //количество строк в бд для описания наименований, типов и пр
+    //
+	//переводит дату в число до лет/месяцев/недель/дней/часов/минут/секунд
+	//yyyymmddhhmiss
+	toNum: function(date, sMode) {
+		switch (sMode)
+		{
+			case "year": return date.getFullYear();
+			case "month": return date.getFullYear() * 100 + date.getMonth();
+				//! это не неделя по порядку ! case "day": return date.getFullYear()*1000 + date.getMonth()*10 + date.getDay();
+			case "date": return date.getFullYear() * 10000 + date.getMonth() * 100 + date.getDate();
+			case "hours": return date.getFullYear() * 1000000 + date.getMonth() * 10000 + date.getDate() * 100 + date.getHours();
+			case "minutes": return date.getFullYear() * 100000000 + date.getMonth() * 1000000 + date.getDate() * 10000 + date.getHours() * 100 + date.getMinutes();
+			case "seconds": return date.getFullYear() * 10000000000 + date.getMonth() * 100000000 + date.getDate() * 1000000 + date.getHours() * 10000 + date.getMinutes() * 100 + date.getSeconds();
 
-	check:function() { //проверка целостности бд
+		}
+	},
+	//
+	//линейный ритм с начальным и конечным значениями {rBeg.x,rBeg.y} {rEnd.x,rEnd.y}
+	//возвращает значение в точке х. 
+	rithmLinear: function(x, rBeg, rEnd) {
+		return rBeg.y + (x - rBeg.x) * (rEnd.y - rBeg.y) / (rEnd.x - rBeg.x);
+	},
+	//
+	//синусоидальный ритм с nCycles периодов на отрезке xBeg,xEnd, средним значением nAverage и амплитудой nAmplitude
+	//возвращает значение в точке х. 
+	rithmSin: function(x, xBeg, xEnd, nCycles, nAverage, nAmplitude) {
+		return nAverage + nAmplitude * Math.sin((x - xBeg) * 2 * 3.1415 * nCycles / (xEnd - xBeg));
+	},
+	//
+	check: function() { //проверка целостности бд
         this.table.forEach(
 			function(item, i, arr) { 
 				if (i > 1)
@@ -134,7 +178,7 @@ var glOcalendar =
 		//и при втором проходе дописываем справа блоки по blockLen девяток у неконцевых вершин чтобы все номера были равной длины
 		this.treeLen = 1;
 		for (var el in this.table)
-			if (el > this.zagolovokRows-1) //заголовочную часть массива не меняем!
+			if (el > this.zagolovokRows - 1) //заголовочную часть массива не меняем!
 			{
 				this.table[el][this.table[0].indexOf('globalsid')] = String(this.table[el][this.table[0].indexOf('id')]).padStart(this.blockLen, '0');
 				var pid = parseInt(this.table[el][this.table[0].indexOf('parentid')]);
@@ -157,7 +201,7 @@ var glOcalendar =
 				this.table[el][this.table[0].indexOf('level')] = nLevel0;
 			}
 		for (var el in this.table)
-			if (el > this.zagolovokRows-1) //заголовочную часть массива не меняем!
+			if (el > this.zagolovokRows - 1) //заголовочную часть массива не меняем!
 				if (this.table[el][this.table[0].indexOf('globalsid')].length < this.treeLen * this.blockLen)
 					this.table[el][this.table[0].indexOf('globalsid')] = String(this.table[el][this.table[0].indexOf('globalsid')]).padEnd(this.treeLen * this.blockLen, '9');
 //
@@ -176,7 +220,7 @@ var glOcalendar =
 						switch (nMode)
 						{
 							case 0:
-								return (i>(glOcalendar.zagolovokRows-1));
+								return (i > (glOcalendar.zagolovokRows - 1));
 							case 1:
 								try
 								{ 
@@ -197,8 +241,8 @@ var glOcalendar =
 					//отступ для подуровней
 					+ String(" ").padStart((item[glOcalendar.table[0].indexOf('level')] - 1) * 10, "..........")
 					+ (item[glOcalendar.table[0].indexOf('name')]) 
-					+ ((String(item[glOcalendar.table[0].indexOf('formula')]).length==0)?"":(".   Средняя нагрузка: " + ev(item[glOcalendar.table[0].indexOf('formula')])  + " " + (item[glOcalendar.table[0].indexOf('dimension')])  ))
-					+ ((String(item[glOcalendar.table[0].indexOf('popravka')]).length==0)?"":(".   Рекомендуемая нагрузка с учетом поправки: " + ev(item[glOcalendar.table[0].indexOf('formula')] + item[glOcalendar.table[0].indexOf('popravka')]) + " " + (item[glOcalendar.table[0].indexOf('dimension')]) ))
+					+ ((String(item[glOcalendar.table[0].indexOf('formula')]).length == 0) ?"": (".   Средняя нагрузка: " + ev(item[glOcalendar.table[0].indexOf('formula')])  + " " + (item[glOcalendar.table[0].indexOf('dimension')])))
+					+ ((String(item[glOcalendar.table[0].indexOf('popravka')]).length == 0) ?"": (".   Рекомендуемая нагрузка с учетом поправки: " + ev(item[glOcalendar.table[0].indexOf('formula')] + item[glOcalendar.table[0].indexOf('popravka')]) + " " + (item[glOcalendar.table[0].indexOf('dimension')])))
 					+ '   ' 
 					+ ev(item[glOcalendar.table[0].indexOf('period_description')]);// + '</>';
 				if (!!item[glOcalendar.table[0].indexOf('button_onclick')])  
@@ -327,19 +371,19 @@ function loadCurrentData() {
   </head>
   <body onload="loadCurrentData()" onresize = "resizeAll()" style="color: #633366; font-size:250%">
 	<h3 class="bg-primary p-a-1">Календарь: </h3>
-<!-- <div id="divInit" style="display:1;visibility:visible;color:#633366; font-size:90%"></div>
-	
+	<!-- <div id="divInit" style="display:1;visibility:visible;color:#633366; font-size:90%"></div>
+
 	<p>
 	<textarea id = "idTextsToSpeek" style = "width:600px;height:400px"></textarea>
 	</p>
-	
+
 	<p></p>
 	<p></p>
 	<p>
-	  <button id = "idCalculator" style = "width:200px;height:30px" onclick="startCalculator()" >Калькулятор ритмов</button>
+	<button id = "idCalculator" style = "width:200px;height:30px" onclick="startCalculator()" >Калькулятор ритмов</button>
 	</p>
 	<div id = "divCalendar" style="color: #333366; font-size:100%"></div>
--->
+	-->
 <style type="text/css">
 .tabs { width: 100%; padding: 0px; margin: 0 auto; }
 .tabs>input { display: none; }
@@ -377,32 +421,32 @@ function loadCurrentData() {
 
 	  <input type="radio" name="inset" value="" id="tab_2">
 	  <label for="tab_2">Все дела</label>
-<!--
+	  <!--
 	  <input type="radio" name="inset" value="" id="tab_3">
 	  <label for="tab_3">Вкладка №3</label>
 
 	  <input type="radio" name="inset" value="" id="tab_4">
 	  <label for="tab_4">Вкладка №4</label>
--->
+	  -->
 	  <div id="txt_1">
-<!--
+		<!--
         <p>Произвольное содержимое...</p>
         <p>Произвольное содержимое...</p>
         <p>Произвольное содержимое...</p>
--->
+		-->
 	  </div>
 	  <div id="txt_2">
-<!--        <p>Вторая вкладка</p>   -->
+		<!--        <p>Вторая вкладка</p>   -->
 	  </div>
-<!--
+	  <!--
 	  <div id="txt_3">
-        <p>Размеры содержимого вкладок</p>
-        <p>могут отличаться по высоте!</p>
+	  <p>Размеры содержимого вкладок</p>
+	  <p>могут отличаться по высоте!</p>
 	  </div>
 	  <div id="txt_4">
-        <img src="image/logo.png" width="533" height="77" alt="Лого">
+	  <img src="image/logo.png" width="533" height="77" alt="Лого">
 	  </div>
--->
+	  -->
 	</div>
 
 
