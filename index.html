@@ -26,7 +26,18 @@
  */
 var DATABASE_aCalendar=[
 	//===  значения колонок  ====
-	["id","parentid","globalsid","level","formula","popravka","dimension","name","period_description","period_formula","button_onclick"],
+	["id"
+	 ,"parentid"
+	 ,"globalsid"
+	 ,"level"
+	 ,"formula"
+	 ,"popravka"
+	 ,"dimension"
+	 ,"name"
+	 ,"period_description"
+	 ,"period_formula"
+	 ,"button_onclick"
+	],
 	//доступ по имени поля а не по индексу такой:  item[ Gl_aDeals[0].indexOf('name') ]
 	//!!! нужно делать доступ по имени поля чтобы всегда можно было добавить поля
 	["id"
@@ -55,8 +66,8 @@ var DATABASE_aCalendar=[
     [8,0,0,0,"","","","5 и 5 минут дриблинг с бросками. степ с резиной","вечер раб. дня на удаленке","(glOcalendar.currDate.getDay() in [1,2,4,5])&&(glOcalendar.currDate.getHours()>11 )"],
 
 	//health and imp
-	[101,0,0,0,"","","","'не есть до ' + switch (4){case 4: '17';case 6: '18';default: '19';}", "по средам","glOcalendar.currDate.getDay()==3","alert('100500')"],
-    [102,0,0,0,"Math.round((25/3.1415)*Math.atan(glOcalendar.currDate.getTime() / (1000*60 *60 *24) ))","+Math.round(Math.sin(glOcalendar.currDate.getDay()))","раз(вдох и столько же выдох)","дых. в обед равномерно увелич по шагам","","true",],
+	[101,0,0,0,"switch (4){case 4: '17';case 6: '18';default: '19';}",""," часов дня","не есть до", "по средам","glOcalendar.currDate.getDay()==3","alert('100500')"],
+    [102,0,0,0,"Math.round((glOcalendar.currDate.getFullYear()<2021 ? (20*(glOcalendar.currDate.getFullYear()*10000 +glOcalendar.currDate.getMonth()*100 +glOcalendar.currDate.getDate()-20200101)/(20200612-20200101)): 20))","+Math.round(Math.atan(glOcalendar.currDate.getDate()))","раз(вдох и столько же выдох)","дых. в обед равномерно увелич по шагам","","true",],
 
 	//imp
 	[100001,0,0,0,"","","","6 мин из 60 стоп", "по выходным","true",""],
