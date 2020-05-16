@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="css/bootstrap.min.css" > -->
 	<title>Calendar</title>
 
-<style>"font-size: 200%" 
+<style>"font-size: 100%" 
 </style>
 <script>
 /*
@@ -87,8 +87,8 @@ var DATABASE_aCalendar=[
 	 [1000002,2,0,0,"","","222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
 	 [1000003,8,0,0,"","","888 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
 	 [1000004,2,0,0,"","","222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
-	 [1000005,1000002,"","",0,0,"потомок 222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
-	 */
+	 [1000005,1000002,0,0,"","","потомок 222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
+	*/
 
 ];
 //============================================================ 
@@ -237,7 +237,8 @@ var glOcalendar =
 				// Добавляем HTML-контент с пом. свойства innerHTML
 				sHTML += '<li style="visibility:inherited;font-size:'
 					//уменьшение шрифта для подуровней
-					+ (300 / (2 + item[glOcalendar.table[0].indexOf('level')])) + '%">' 
+					//+ (300 / (2 + item[glOcalendar.table[0].indexOf('level')])) + '%">' 
+					+ '100%">'
 					//отступ для подуровней
 					+ String(" ").padStart((item[glOcalendar.table[0].indexOf('level')] - 1) * 10, "..........")
 					+ (item[glOcalendar.table[0].indexOf('name')]) 
@@ -369,7 +370,7 @@ function loadCurrentData() {
 
 
   </head>
-  <body onload="loadCurrentData()" onresize = "resizeAll()" style="color: #633366; font-size:250%">
+  <body onload="loadCurrentData()" onresize = "resizeAll()" style="color: #633366; font-size:100%">
 	<h3 class="bg-primary p-a-1">Календарь: </h3>
 
 <style type="text/css">
