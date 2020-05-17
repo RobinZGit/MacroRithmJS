@@ -44,6 +44,7 @@ var DATABASE_aCalendar=[
 		,"period_description"
 		,"period_formula"
 		,"button_onclick"
+		,"style"
 	],
 	//доступ по имени поля а не по индексу такой:  item[ Gl_aDeals[0].indexOf('name') ]
 	//!!! нужно делать доступ по имени поля чтобы всегда можно было добавить поля
@@ -58,37 +59,39 @@ var DATABASE_aCalendar=[
 		,"описание периодичности"
 		,"'функция выводить либо не выводить в тек. список'==''"
 		,"функция вызова онлайн ритма, если нужно вывести в виде кнопки"
+		,"можно задать особый стиль, подставится в атрибут тэга элемента"
 	],
 	//===========================
 
 	//workout
-	[1,0,0,0,"","","","отжимания вниз головой","по понедельникам","glOcalendar.currDate.getDay()==1"],
-
-	[2,0,0,0,"","","","подтягивания на одной руке", "по вторникам","glOcalendar.currDate.getDay()==2"],
-	[3,0,0,0,"","","","флаг", "по четвергам","glOcalendar.currDate.getDay()==4"],
-	[4,0,0,0,"","","","флаг", "по пятницам","glOcalendar.currDate.getDay()==5"],
-	[5,0,0,0,"","","","спичаги с брусьев на количество", "по субботам","glOcalendar.currDate.getDay()==6"],
-	[6,0,0,0,"","","","спичаги с рук на количество. ходьба на руках.", "по воскресеньям","glOcalendar.currDate.getDay()==0"],
-    [7,0,0,0,"","","","5 и 5 минут дриблинг с бросками. легкий бег либо ролики либо степ","утро раб. дня на удаленке","(glOcalendar.currDate.getDay() in [1,2,4,5])&&(glOcalendar.currDate.getHours()<11 )"],
-    [8,0,0,0,"","","","5 и 5 минут дриблинг с бросками. степ с резиной","вечер раб. дня на удаленке","(glOcalendar.currDate.getDay() in [1,2,4,5])&&(glOcalendar.currDate.getHours()>11 )"],
+	[1,0,0,0,"","","","отжимания вниз головой","по понедельникам","glOcalendar.currDate.getDay()==1","",""],
+	[2,0,0,0,"","","","подтягивания на одной руке", "по вторникам","glOcalendar.currDate.getDay()==2","",""],
+	[3,0,0,0,"","","","флаг", "по четвергам","glOcalendar.currDate.getDay()==4","",""],
+	[4,0,0,0,"","","","флаг", "по пятницам","glOcalendar.currDate.getDay()==5","",""],
+	[5,0,0,0,"","","","спичаги с брусьев на количество", "по субботам","glOcalendar.currDate.getDay()==6","",""],
+	[6,0,0,0,"","","","спичаги с рук на количество. ходьба на руках.", "по воскресеньям","(glOcalendar.currDate.getDay()==0)","","font-size:100%"],
+    [7,0,0,0,"","","","5 и 5 минут дриблинг с бросками. легкий бег либо ролики либо степ","утро раб. дня на удаленке","(( [1,2,4,5].indexOf(glOcalendar.currDate.getDay())>=0))&&(glOcalendar.currDate.getHours()<11 )","",""],
+    [8,0,0,0,"","","","5 и 5 минут дриблинг с бросками. степ с резиной","вечер раб. дня на удаленке","(( [1,2,4,5].indexOf(glOcalendar.currDate.getDay())>=0))&&(glOcalendar.currDate.getHours()>11 )","",""],
 
 	//health and imp
-	[101,0,0,0,"switch (4){case 4: '17';case 6: '18';default: '19';}",""," часов дня","не есть до", "по средам","glOcalendar.currDate.getDay()==3","alert('100500')"],
-    //[102,0,0,0,"Math.round((glOcalendar.currDate.getFullYear()<2021 ? (20*(glOcalendar.currDate.getFullYear()*10000 +glOcalendar.currDate.getMonth()*100 +glOcalendar.currDate.getDate()-20200101)/(20200612-20200101)): 20))","+Math.round(Math.atan(glOcalendar.currDate.getDate()))","раз(вдох и столько же выдох)","дых. в обед равномерно увелич по шагам","","true",],
+	[101,0,0,0,"switch (4){case 4: '17';case 6: '18';default: '19';}",""," часов дня","не есть до", "по средам","glOcalendar.currDate.getDay()==3","alert('100500')",""],
     [102,0,0,0,"Math.round(glOcalendar.rithmLinear(glOcalendar.toNum(glOcalendar.currDate,'date'),{x:20200101,y:12},{x:20211212,y:20}))"
 		,"+Math.round((glOcalendar.rithmSin(glOcalendar.toNum(glOcalendar.currDate,'date'),20200101,20200128,2,0,4)))"
-		,"раз(вдох и столько же выдох)","дых. в обед равномерно увелич по шагам","","true",],
+		,"раз(вдох и столько же выдох)","дых. в обед равномерно увелич по шагам","","true","",""],
 
 	//imp
-	[100001,0,0,0,"","","","6 мин из 60 стоп", "по выходным","true",""],
+	[100001,0,0,0,"","","","6 мин из 60 стоп", "по выходным","true","",""],
+
+	//imp
+	[100002,0,0,0,"","","","тест ритма по частоте 3/5 (сух.я)", "по частоте","glOcalendar.rithmFrequency(glOcalendar.toNum(glOcalendar.currDate,'date'),{numerator:2,denominator:5})","","font-size:200%"],
 
 	//тест 
 	/*
-	 [1000002,2,0,0,"","","222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
-	 [1000003,8,0,0,"","","888 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
-	 [1000004,2,0,0,"","","222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
-	 [1000005,1000002,0,0,"","","потомок 222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
-	*/
+	 [1000200,2,0,0,"","","222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
+	 [1000300,8,0,0,"","","888 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
+	 [1000400,2,0,0,"","","222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
+	 [1000500,1000200,0,0,"","","потомок 222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
+	 */
 
 ];
 //============================================================ 
@@ -103,11 +106,14 @@ var glOcalendar =
 {
     table: DATABASE_aCalendar, //БАЗА ДАННЫХ
 	currDate: new Date(),
-	//
+
+	//== служебные свойства ==
 	blockLen:10, //кол во цифр на блок одного ид.  ид дб строго меньше blockLen
 	treeLen:1,   //высота дерева, расчитывается в calcSortFields
     zagolovokRows:2, //количество строк в бд для описания наименований, типов и пр
-    //
+    //========================
+
+
 	//переводит дату в число до лет/месяцев/недель/дней/часов/минут/секунд
 	//yyyymmddhhmiss
 	toNum: function(date, sMode) {
@@ -123,19 +129,38 @@ var glOcalendar =
 
 		}
 	},
-	//
+
+
 	//линейный ритм с начальным и конечным значениями {rBeg.x,rBeg.y} {rEnd.x,rEnd.y}
 	//возвращает значение в точке х. 
-	rithmLinear: function(x, rBeg, rEnd) {
-		return rBeg.y + (x - rBeg.x) * (rEnd.y - rBeg.y) / (rEnd.x - rBeg.x);
+	rithmLinear: function(x, oBeg, oEnd) {
+		return oBeg.y + (x - oBeg.x) * (oEnd.y - oBeg.y) / (oEnd.x - oBeg.x);
 	},
-	//
+
+
 	//синусоидальный ритм с nCycles периодов на отрезке xBeg,xEnd, средним значением nAverage и амплитудой nAmplitude
 	//возвращает значение в точке х. 
 	rithmSin: function(x, xBeg, xEnd, nCycles, nAverage, nAmplitude) {
 		return nAverage + nAmplitude * Math.sin((x - xBeg) * 2 * 3.1415 * nCycles / (xEnd - xBeg));
 	},
-	//
+
+
+	//ритм по частоте появления: oFreq.numerator/oFreq.denominator
+	//    выстраивает блоки по oFreq.denominator точек и отмечает их 0 или 1
+	//    начинает с 1, потом идут oFreq.numerator/oFreq.denominator-1  нулей
+	//    точность дроби видит до тысячных
+	//возвращает значение 0 или 1 в точке n. 
+	rithmFrequency: function(n, oFreq) {
+		return (((n * 1000) % (Math.floor(1000 * oFreq.numerator / oFreq.denominator))) != 0);
+	},
+
+
+	//возвращает true с вероятностью probability, иначе false (испытание Бернулли)
+	//  пример вызова glOcalendar.bernulli(0.5)
+	bernulli: function(probability) {
+		return (probability >= Math.random());
+	},
+
 	check: function() { //проверка целостности бд
         this.table.forEach(
 			function(item, i, arr) { 
@@ -235,10 +260,10 @@ var glOcalendar =
 			.forEach(
 			function(item, i, arr) { 
 				// Добавляем HTML-контент с пом. свойства innerHTML
-				sHTML += '<li style="visibility:inherited;font-size:'
+				sHTML += '<li style="' + item[glOcalendar.table[0].indexOf('style')] + '">'//visibility:inherited;font-size:'
 					//уменьшение шрифта для подуровней
 					//+ (300 / (2 + item[glOcalendar.table[0].indexOf('level')])) + '%">' 
-					+ '100%">'
+					//+ '100%">'
 					//отступ для подуровней
 					+ String(" ").padStart((item[glOcalendar.table[0].indexOf('level')] - 1) * 10, "..........")
 					+ (item[glOcalendar.table[0].indexOf('name')]) 
