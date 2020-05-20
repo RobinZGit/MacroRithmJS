@@ -268,7 +268,7 @@ var glOcalendar =
 					+ String(" ").padStart((item[glOcalendar.table[0].indexOf('level')] - 1) * 10, "..........")
 					+ (item[glOcalendar.table[0].indexOf('name')]) 
 					+ ((String(item[glOcalendar.table[0].indexOf('formula')]).length == 0) ?"": (".   Средняя нагрузка: " + ev(item[glOcalendar.table[0].indexOf('formula')])  + " " + (item[glOcalendar.table[0].indexOf('dimension')])))
-					+ ((String(item[glOcalendar.table[0].indexOf('popravka')]).length == 0) ?"": (".   Рекомендуемая нагрузка с учетом поправки: " + ev(item[glOcalendar.table[0].indexOf('formula')] + item[glOcalendar.table[0].indexOf('popravka')]) + " " + (item[glOcalendar.table[0].indexOf('dimension')])))
+					+ ((String(item[glOcalendar.table[0].indexOf('popravka')]).length == 0) ?"": (".   Рекомендуемая нагрузка с учетом поправки: <span style='color: red; font-weight: bold'>" + ev(item[glOcalendar.table[0].indexOf('formula')] + item[glOcalendar.table[0].indexOf('popravka')]) + " " + (item[glOcalendar.table[0].indexOf('dimension')]) +"</span>"))
 					+ '   ' 
 					+ ev(item[glOcalendar.table[0].indexOf('period_description')]);// + '</>';
 				if (!!item[glOcalendar.table[0].indexOf('button_onclick')])  
@@ -285,12 +285,33 @@ var glOcalendar =
 	innerHTMLexpandedTreeCurrent: function() {
 		return this.innerHTMLexpandedTree(1);
 	},
+	
+	//выводим список текущих дел
+	showExpandedTreeCurrent: function() {
+      var label= document.createElement("label");
+	  label.innerHTML =  "<p><label>--------- "+glOcalendar.currDate+" --------------</label><p>";
+	  document.getElementById("txt_1").appendChild(label);
 
+	  var div = document.createElement("div");
+	  div.innerHTML =  glOcalendar.innerHTMLexpandedTreeCurrent();
+	  document.getElementById("txt_1").appendChild(div);
+	  
+	  var label2= document.createElement("label");
+	  label2.innerHTML =  "<p><label>---------------------------------------</label><p>";
+	  document.getElementById("txt_1").appendChild(div);
+	}, 
 
 	//список всех дел
 	innerHTMLexpandedTreeAll: function() {
 		return this.innerHTMLexpandedTree(0);
-	}
+	},
+	
+	//выводим список всех дел
+	showExpandedTreeAll: function() {
+	  var div = document.createElement("div");
+	  div.innerHTML =  glOcalendar.innerHTMLexpandedTreeAll();
+	  document.getElementById("txt_2").appendChild(div);
+	}  
 
 
 };
@@ -318,14 +339,17 @@ function loadCurrentData() {
 	glOcalendar.calcSortFields();
 
 	//выводим список текущих дел
-	var div = document.createElement("div");
-	div.innerHTML =  glOcalendar.innerHTMLexpandedTreeCurrent();
-	document.getElementById("txt_1").appendChild(div);
+	glOcalendar.showExpandedTreeCurrent();
 
+	/*
+	var buttonNext  = document.createElement("div");
+	buttonNext.innerHTML =  "<button onclick = '{glOcalendar.currDate.setDate(glOcalendar.currDate.getDate()+1);;glOcalendar.showExpandedTreeCurrent();}'>Next day</button>";
+	document.getElementById("txt_1").appendChild(buttonNext);
+    */
+	
 	//выводим список всех дел
-	var div = document.createElement("div");
-	div.innerHTML =  glOcalendar.innerHTMLexpandedTreeAll();
-	document.getElementById("txt_2").appendChild(div);
+	glOcalendar.showExpandedTreeAll();
+
 
 }  
 
