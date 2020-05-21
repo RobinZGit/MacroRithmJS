@@ -341,15 +341,18 @@ function loadCurrentData() {
 	//выводим список текущих дел
 	glOcalendar.showExpandedTreeCurrent();
 
-	/*
-	var buttonNext  = document.createElement("div");
-	buttonNext.innerHTML =  "<button onclick = '{glOcalendar.currDate.setDate(glOcalendar.currDate.getDate()+1);;glOcalendar.showExpandedTreeCurrent();}'>Next day</button>";
-	document.getElementById("txt_1").appendChild(buttonNext);
-    */
 	
+	var buttonNext  = document.createElement("div");
+	buttonNext.innerHTML =  "<p><button onclick = '{glOcalendar.currDate.setDate(glOcalendar.currDate.getDate()+1);;glOcalendar.showExpandedTreeCurrent();}'>Next day</button></p>";
+	document.getElementById("txt_1").appendChild(buttonNext);
+    
+	buttonEdit  = document.createElement("div");
+	buttonEdit.innerHTML =  "<p><a href = 'https://github.com/RobinZGit/MacroRithmJS/blob/master/index.html'>Edit</button></p>";
+	document.getElementById("txt_1").appendChild(buttonEdit);
+ 
 	//выводим список всех дел
 	glOcalendar.showExpandedTreeAll();
-
+//https://github.com/RobinZGit/MacroRithmJS/blob/master/index.html
 
 }  
 
