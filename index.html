@@ -10,7 +10,7 @@
 
 <style>"font-size: 100%" 
 </style>
-	<script src="https://github.com/RobinZGit/MacroRithmJS/blob/master/data.js"></script>
+	<script src="https://robinzgit.github.io/MacroRithmJS/data.js"></script>
 <script>
 /*
  1. сетка. массив лет/месяцев/недель/дней/часов... (размерность сетки) от начальной до конечной точки
@@ -32,6 +32,7 @@
 //============================================================ 
 //============================================================ 
 //============================================================ 
+/*
 var DATABASE_aCalendar=[
 	//===  значения колонок  ====
 	["id"
@@ -87,14 +88,15 @@ var DATABASE_aCalendar=[
 	[100002,0,0,0,"","","","придумать ритм переноса еды с вечера на пораньше", "по частоте","glOcalendar.rithmFrequency(glOcalendar.toNum(glOcalendar.currDate,'date'),{numerator:1,denominator:5})","","font-size:200%"],
 
 	//тест 
-	/*
-	 [1000200,2,0,0,"","","222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
-	 [1000300,8,0,0,"","","888 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
-	 [1000400,2,0,0,"","","222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
-	 [1000500,1000200,0,0,"","","потомок 222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
-	 */
+	
+	// [1000200,2,0,0,"","","222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
+	// [1000300,8,0,0,"","","888 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
+	// [1000400,2,0,0,"","","222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
+	// [1000500,1000200,0,0,"","","потомок 222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
+	 
 
 ];
+*/
 //============================================================ 
 //============================================================ 
 //============================================================ 
@@ -348,7 +350,7 @@ function loadCurrentData() {
 	document.getElementById("txt_1").appendChild(buttonNext);
     
 	buttonEdit  = document.createElement("div");
-	buttonEdit.innerHTML =  "<p><a href = 'https://github.com/RobinZGit/MacroRithmJS/blob/master/index.html'>Edit</button></p>";
+	buttonEdit.innerHTML =  "<p><a href = 'https://github.com/RobinZGit/MacroRithmJS/blob/master/data.js'>Edit</button></p>";
 	document.getElementById("txt_1").appendChild(buttonEdit);
  
 	//выводим список всех дел
