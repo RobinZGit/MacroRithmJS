@@ -292,7 +292,7 @@ var glOcalendar =
 	//выводим список текущих дел
 	showExpandedTreeCurrent: function() {
       var label= document.createElement("label");
-	  label.innerHTML =  "<p><label>--------- "+glOcalendar.currDate+" --------------</label><p>";
+	  label.innerHTML =  "<p><label style = 'font-size:125%;color:red'>--------- "+glOcalendar.currDate.toLocaleString()+" --------------</label><p>";
 	  document.getElementById("txt_1").appendChild(label);
 
 	  var div = document.createElement("div");
