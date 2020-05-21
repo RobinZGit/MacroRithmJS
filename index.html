@@ -10,6 +10,7 @@
 
 <style>"font-size: 100%" 
 </style>
+<script src="data.js"></script>
 <script>
 /*
  1. сетка. массив лет/месяцев/недель/дней/часов... (размерность сетки) от начальной до конечной точки
@@ -104,7 +105,7 @@ var DATABASE_aCalendar=[
 //основной объект - бд и методы
 var glOcalendar =
 {
-    table: DATABASE_aCalendar, //БАЗА ДАННЫХ
+    table: TABLE_aCalendar, //БАЗА ДАННЫХ
 	currDate: new Date(),
 
 	//== служебные свойства ==
