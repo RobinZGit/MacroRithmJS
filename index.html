@@ -10,7 +10,33 @@
 
 <style>"font-size: 100%" 
 </style>
+
+	<!--база данных -->
 	<script src="https://robinzgit.github.io/MacroRithmJS/data.js"></script>
+
+
+	<!--функции шифрования -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+<script> 
+function encrypt(message1, key) {
+	var message = message1;
+	if (key.length > 0)
+		message = CryptoJS.AES.encrypt(message1, key);
+	return message.toString();
+}
+function decrypt(message, key) {
+    if (key.length > 0)
+	{
+		var code = CryptoJS.AES.decrypt(message, key);
+		var decryptedMessage = code.toString(CryptoJS.enc.Utf8);
+		return decryptedMessage;
+	}
+	else return message;
+}
+</script>
+	<!-- -->
+
+
 <script>
 /*
  1. сетка. массив лет/месяцев/недель/дней/часов... (размерность сетки) от начальной до конечной точки
@@ -33,70 +59,70 @@
 //============================================================ 
 //============================================================ 
 /*
-var DATABASE_aCalendar=[
-	//===  значения колонок  ====
-	["id"
-		,"parentid"
-		,"globalsid"
-		,"level"
-		,"formula"
-		,"popravka"
-		,"dimension"
-		,"name"
-		,"period_description"
-		,"period_formula"
-		,"button_onclick"
-		,"style"
-	],
-	//доступ по имени поля а не по индексу такой:  item[ Gl_aDeals[0].indexOf('name') ]
-	//!!! нужно делать доступ по имени поля чтобы всегда можно было добавить поля
-	["id"
-		,"дело-родитель"
-		,"поле для правильной сортировки в дереве(не заполнять,рассчитается в процессе)"
-		,"уровень в дереве (не заполнять)"
-		,"формула нагрузки дела"
-		,"поправка к формуле. например формула - линейный ритм, а поправка - синусоидальный множитель или добавок "
-		,"размерность нагрузки"
-		,"наименование дела"
-		,"описание периодичности"
-		,"'функция выводить либо не выводить в тек. список'==''"
-		,"функция вызова онлайн ритма, если нужно вывести в виде кнопки"
-		,"можно задать особый стиль, подставится в атрибут тэга элемента"
-	],
-	//===========================
+ var TABLE_aCalendar=[
+ //===  значения колонок  ====
+ ["id"
+ ,"parentid"
+ ,"globalsid"
+ ,"level"
+ ,"formula"
+ ,"popravka"
+ ,"dimension"
+ ,"name"
+ ,"period_description"
+ ,"period_formula"
+ ,"button_onclick"
+ ,"style"
+ ],
+ //доступ по имени поля а не по индексу такой:  item[ Gl_aDeals[0].indexOf('name') ]
+ //!!! нужно делать доступ по имени поля чтобы всегда можно было добавить поля
+ ["id"
+ ,"дело-родитель"
+ ,"поле для правильной сортировки в дереве(не заполнять,рассчитается в процессе)"
+ ,"уровень в дереве (не заполнять)"
+ ,"формула нагрузки дела"
+ ,"поправка к формуле. например формула - линейный ритм, а поправка - синусоидальный множитель или добавок "
+ ,"размерность нагрузки"
+ ,"наименование дела"
+ ,"описание периодичности"
+ ,"'функция выводить либо не выводить в тек. список'==''"
+ ,"функция вызова онлайн ритма, если нужно вывести в виде кнопки"
+ ,"можно задать особый стиль, подставится в атрибут тэга элемента"
+ ],
+ //===========================
 
-	//workout
-	[1,0,0,0,"","","","отжимания вниз головой","по понедельникам","glOcalendar.currDate.getDay()==1","",""],
-	[2,0,0,0,"","","","подтягивания на одной руке", "по вторникам","glOcalendar.currDate.getDay()==2","",""],
-	[3,0,0,0,"","","","флаг", "по четвергам","glOcalendar.currDate.getDay()==4","",""],
-	[4,0,0,0,"","","","флаг", "по пятницам","glOcalendar.currDate.getDay()==5","",""],
-	[5,0,0,0,"","","","спичаги с брусьев на количество", "по субботам","glOcalendar.currDate.getDay()==6","",""],
-	[6,0,0,0,"","","","спичаги с рук на количество. ходьба на руках.", "по воскресеньям","(glOcalendar.currDate.getDay()==0)","","font-size:100%"],
-    [7,0,0,0,"","","","5 и 5 минут дриблинг с бросками. легкий бег либо ролики либо степ","утро раб. дня на удаленке","(( [1,2,4,5].indexOf(glOcalendar.currDate.getDay())>=0))&&(glOcalendar.currDate.getHours()<11 )","",""],
-    [8,0,0,0,"","","","5 и 5 минут дриблинг с бросками. степ с резиной","вечер раб. дня на удаленке","(( [1,2,4,5].indexOf(glOcalendar.currDate.getDay())>=0))&&(glOcalendar.currDate.getHours()>11 )","",""],
+ //workout
+ [1,0,0,0,"","","","отжимания вниз головой","по понедельникам","glOcalendar.currDate.getDay()==1","",""],
+ [2,0,0,0,"","","","подтягивания на одной руке", "по вторникам","glOcalendar.currDate.getDay()==2","",""],
+ [3,0,0,0,"","","","флаг", "по четвергам","glOcalendar.currDate.getDay()==4","",""],
+ [4,0,0,0,"","","","флаг", "по пятницам","glOcalendar.currDate.getDay()==5","",""],
+ [5,0,0,0,"","","","спичаги с брусьев на количество", "по субботам","glOcalendar.currDate.getDay()==6","",""],
+ [6,0,0,0,"","","","спичаги с рук на количество. ходьба на руках.", "по воскресеньям","(glOcalendar.currDate.getDay()==0)","","font-size:100%"],
+ [7,0,0,0,"","","","5 и 5 минут дриблинг с бросками. легкий бег либо ролики либо степ","утро раб. дня на удаленке","(( [1,2,4,5].indexOf(glOcalendar.currDate.getDay())>=0))&&(glOcalendar.currDate.getHours()<11 )","",""],
+ [8,0,0,0,"","","","5 и 5 минут дриблинг с бросками. степ с резиной","вечер раб. дня на удаленке","(( [1,2,4,5].indexOf(glOcalendar.currDate.getDay())>=0))&&(glOcalendar.currDate.getHours()>11 )","",""],
 
-	//health and imp
-	[101,0,0,0,"switch (4){case 4: '17';case 6: '18';default: '19';}",""," часов дня","не есть до", "по средам","glOcalendar.currDate.getDay()==3","alert('100500')",""],
-    [102,0,0,0,"Math.round(glOcalendar.rithmLinear(glOcalendar.toNum(glOcalendar.currDate,'date'),{x:20200101,y:12},{x:20211212,y:20}))"
-		,"+Math.round((glOcalendar.rithmSin(glOcalendar.toNum(glOcalendar.currDate,'date'),20200101,20200128,2,0,4)))"
-		,"раз(вдох и столько же выдох)","дых. в обед равномерно увелич по шагам","","true","",""],
+ //health and imp
+ [101,0,0,0,"switch (4){case 4: '17';case 6: '18';default: '19';}",""," часов дня","не есть до", "по средам","glOcalendar.currDate.getDay()==3","alert('100500')",""],
+ [102,0,0,0,"Math.round(glOcalendar.rithmLinear(glOcalendar.toNum(glOcalendar.currDate,'date'),{x:20200101,y:12},{x:20211212,y:20}))"
+ ,"+Math.round((glOcalendar.rithmSin(glOcalendar.toNum(glOcalendar.currDate,'date'),20200101,20200128,2,0,4)))"
+ ,"раз(вдох и столько же выдох)","дых. в обед равномерно увелич по шагам","","true","",""],
 
-	//imp
-	[100001,0,0,0,"","","","6 мин из 60 стоп", "по выходным","true","",""],
+ //imp
+ [100001,0,0,0,"","","","6 мин из 60 стоп", "по выходным","true","",""],
 
-	//imp
-	[100002,0,0,0,"","","","придумать ритм переноса еды с вечера на пораньше", "по частоте","glOcalendar.rithmFrequency(glOcalendar.toNum(glOcalendar.currDate,'date'),{numerator:1,denominator:5})","","font-size:200%"],
+ //imp
+ [100002,0,0,0,"","","","придумать ритм переноса еды с вечера на пораньше", "по частоте","glOcalendar.rithmFrequency(glOcalendar.toNum(glOcalendar.currDate,'date'),{numerator:1,denominator:5})","","font-size:200%"],
 
-	//тест 
-	
-	// [1000200,2,0,0,"","","222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
-	// [1000300,8,0,0,"","","888 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
-	// [1000400,2,0,0,"","","222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
-	// [1000500,1000200,0,0,"","","потомок 222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
-	 
+ //тест 
 
-];
-*/
+ // [1000200,2,0,0,"","","222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
+ // [1000300,8,0,0,"","","888 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
+ // [1000400,2,0,0,"","","222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
+ // [1000500,1000200,0,0,"","","потомок 222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
+
+
+ ];
+ */
 //============================================================ 
 //============================================================ 
 //============================================================ 
@@ -111,8 +137,9 @@ var glOcalendar =
 	currDate: new Date(),
 
 	//== служебные свойства ==
-	blockLen:10, //кол во цифр на блок одного ид.  ид дб строго меньше blockLen
-	treeLen:1,   //высота дерева, расчитывается в calcSortFields
+	cryptoKey:"", //ключ расшифровки, ввенный при вхое
+	blockLen:10,  //кол во цифр на блок одного ид.  ид дб строго меньше blockLen
+	treeLen:1,    //высота дерева, расчитывается в calcSortFields
     zagolovokRows:2, //количество строк в бд для описания наименований, типов и пр
     //========================
 
@@ -240,7 +267,7 @@ var glOcalendar =
 	//  nMode = 0 - все дела
 	//  nMode = 1 - теkszsssущие на this.currDate дела
 	innerHTMLexpandedTree: function(nMode) { 
-
+        var key = this.cryptoKey
 		var sHTML = "<ul>";
 		this.table
 			//оставляем только необходимые на дату вывода дела
@@ -264,16 +291,16 @@ var glOcalendar =
 			function(item, i, arr) { 
 				// Добавляем HTML-контент с пом. свойства innerHTML
 				sHTML += '<li style="' + item[glOcalendar.table[0].indexOf('style')] + '">'//visibility:inherited;font-size:'
-					//уменьшение шрифта для подуровней
-					//+ (300 / (2 + item[glOcalendar.table[0].indexOf('level')])) + '%">' 
-					//+ '100%">'
+					+ encrypt(
 					//отступ для подуровней
-					+ String(" ").padStart((item[glOcalendar.table[0].indexOf('level')] - 1) * 10, "..........")
-					+ (item[glOcalendar.table[0].indexOf('name')]) 
+					String(" ").padStart((item[glOcalendar.table[0].indexOf('level')] - 1) * 10, "..........")
+					+ item[glOcalendar.table[0].indexOf('name')]
 					+ ((String(item[glOcalendar.table[0].indexOf('formula')]).length == 0) ?"": (".   Средняя нагрузка: " + ev(item[glOcalendar.table[0].indexOf('formula')])  + " " + (item[glOcalendar.table[0].indexOf('dimension')])))
-					+ ((String(item[glOcalendar.table[0].indexOf('popravka')]).length == 0) ?"": (".   Рекомендуемая нагрузка с учетом поправки: <span style='color: red; font-weight: bold'>" + ev(item[glOcalendar.table[0].indexOf('formula')] + item[glOcalendar.table[0].indexOf('popravka')]) + " " + (item[glOcalendar.table[0].indexOf('dimension')]) +"</span>"))
+					+ ((String(item[glOcalendar.table[0].indexOf('popravka')]).length == 0) ?"": (".   Рекомендуемая нагрузка с учетом поправки: <span style='color: red; font-weight: bold'>" + ev(item[glOcalendar.table[0].indexOf('formula')] + item[glOcalendar.table[0].indexOf('popravka')]) + " " + (item[glOcalendar.table[0].indexOf('dimension')]) + "</span>"))
 					+ '   ' 
-					+ ev(item[glOcalendar.table[0].indexOf('period_description')]);// + '</>';
+					+ ev(item[glOcalendar.table[0].indexOf('period_description')])
+					, key);
+
 				if (!!item[glOcalendar.table[0].indexOf('button_onclick')])  
 					if (item[glOcalendar.table[0].indexOf('button_onclick')].trim().length > 0)
 						sHTML += '<button ' + ' onclick="' + item[glOcalendar.table[0].indexOf('button_onclick')] + '">Запустить</>';
@@ -288,32 +315,32 @@ var glOcalendar =
 	innerHTMLexpandedTreeCurrent: function() {
 		return this.innerHTMLexpandedTree(1);
 	},
-	
+
 	//выводим список текущих дел
 	showExpandedTreeCurrent: function() {
-      var label= document.createElement("label");
-	  label.innerHTML =  "<p><label style = 'font-size:125%;color:red'>--------- "+glOcalendar.currDate.toLocaleString()+" --------------</label><p>";
-	  document.getElementById("txt_1").appendChild(label);
+		var label= document.createElement("label");
+		label.innerHTML =  "<p><label style = 'font-size:125%;color:red'>--------- " + glOcalendar.currDate.toLocaleString() + " --------------</label><p>";
+		document.getElementById("txt_1").appendChild(label);
 
-	  var div = document.createElement("div");
-	  div.innerHTML =  glOcalendar.innerHTMLexpandedTreeCurrent();
-	  document.getElementById("txt_1").appendChild(div);
-	  
-	  var label2= document.createElement("label");
-	  label2.innerHTML =  "<p><label>---------------------------------------</label><p>";
-	  document.getElementById("txt_1").appendChild(div);
+		var div = document.createElement("div");
+		div.innerHTML =  glOcalendar.innerHTMLexpandedTreeCurrent();
+		document.getElementById("txt_1").appendChild(div);
+
+		var label2= document.createElement("label");
+		label2.innerHTML =  "<p><label>---------------------------------------</label><p>";
+		document.getElementById("txt_1").appendChild(div);
 	}, 
 
 	//список всех дел
 	innerHTMLexpandedTreeAll: function() {
 		return this.innerHTMLexpandedTree(0);
 	},
-	
+
 	//выводим список всех дел
 	showExpandedTreeAll: function() {
-	  var div = document.createElement("div");
-	  div.innerHTML =  glOcalendar.innerHTMLexpandedTreeAll();
-	  document.getElementById("txt_2").appendChild(div);
+		var div = document.createElement("div");
+		div.innerHTML =  glOcalendar.innerHTMLexpandedTreeAll();
+		document.getElementById("txt_2").appendChild(div);
 	}  
 
 
@@ -335,6 +362,8 @@ function resizeAll() {
 //основная функция. вывод списка текущих дел
 function loadCurrentData() {
 
+    //glOcalendar.cryptoKey = prompt("Введите ключ расшифровки", "");
+	
 	//проверки целостности б.д.
 	glOcalendar.check();
 
@@ -344,15 +373,15 @@ function loadCurrentData() {
 	//выводим список текущих дел
 	glOcalendar.showExpandedTreeCurrent();
 
-	
+
 	var buttonNext  = document.createElement("div");
 	buttonNext.innerHTML =  "<p><button onclick = '{glOcalendar.currDate.setDate(glOcalendar.currDate.getDate()+1);;glOcalendar.showExpandedTreeCurrent();}'>Next day</button></p>";
 	document.getElementById("txt_1").appendChild(buttonNext);
-    
+
 	buttonEdit  = document.createElement("div");
 	buttonEdit.innerHTML =  "<p><a href = 'https://github.com/RobinZGit/MacroRithmJS/blob/master/data.js'>Edit</button></p>";
 	document.getElementById("txt_1").appendChild(buttonEdit);
- 
+
 	//выводим список всех дел
 	glOcalendar.showExpandedTreeAll();
 //https://github.com/RobinZGit/MacroRithmJS/blob/master/index.html
