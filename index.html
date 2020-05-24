@@ -11,8 +11,11 @@
 <style>"font-size: 100%" 
 </style>
 
-	<!--база данных -->
+	<!--база данных --> 
 	<script src="https://robinzgit.github.io/MacroRithmJS/data.js"></script>
+	<!--
+	<script src="data.js"></script>
+	-->
 
 
 	<!--функции шифрования -->
@@ -140,10 +143,27 @@ var glOcalendar =
 	cryptoKey:"", //ключ расшифровки, ввенный при вхое
 	blockLen:10,  //кол во цифр на блок одного ид.  ид дб строго меньше blockLen
 	treeLen:1,    //высота дерева, расчитывается в calcSortFields
-    zagolovokRows:2, //количество строк в бд для описания наименований, типов и пр
+    zagolovokRows:3, //количество строк в бд для описания наименований, типов и пр
     //========================
-
-
+	/*
+	 //расшифровка/шифрование, если это требуется
+	 _encrypt:function (message1, fieldname) {
+	 var message = message1;
+	 if (this.cryptoKey.length > 0)
+	 message = CryptoJS.AES.encrypt(message1, this.cryptoKey);
+	 return message.toString();
+	 },
+	 _decrypt: function (message, fieldname) {
+	 if (this.cryptoKey.length > 0)
+	 {
+	 var code = CryptoJS.AES.decrypt(message, this.cryptoKey);
+	 var decryptedMessage = code.toString(CryptoJS.enc.Utf8);
+	 return decryptedMessage;
+	 }
+	 else return message;
+	 }
+	 ,
+	 */
 	//переводит дату в число до лет/месяцев/недель/дней/часов/минут/секунд
 	//yyyymmddhhmiss
 	toNum: function(date, sMode) {
@@ -181,7 +201,7 @@ var glOcalendar =
 	//    точность дроби видит до тысячных
 	//возвращает значение 0 или 1 в точке n. 
 	rithmFrequency: function(n, oFreq) {
-		return (((n * 1000) % (Math.floor(1000 * oFreq.numerator / oFreq.denominator))) != 0);
+		return ((n % oFreq.denominator) % Math.floor(oFreq.denominator / oFreq.numerator)) == 0;
 	},
 
 
@@ -267,7 +287,7 @@ var glOcalendar =
 	//  nMode = 0 - все дела
 	//  nMode = 1 - теkszsssущие на this.currDate дела
 	innerHTMLexpandedTree: function(nMode) { 
-        var key = this.cryptoKey
+        var key = this.cryptoKey;
 		var sHTML = "<ul>";
 		this.table
 			//оставляем только необходимые на дату вывода дела
@@ -291,15 +311,16 @@ var glOcalendar =
 			function(item, i, arr) { 
 				// Добавляем HTML-контент с пом. свойства innerHTML
 				sHTML += '<li style="' + item[glOcalendar.table[0].indexOf('style')] + '">'//visibility:inherited;font-size:'
-					+ encrypt(
+					+//encrypt(
 					//отступ для подуровней
 					String(" ").padStart((item[glOcalendar.table[0].indexOf('level')] - 1) * 10, "..........")
-					+ item[glOcalendar.table[0].indexOf('name')]
+					+ encrypt(item[glOcalendar.table[0].indexOf('name')], key)
 					+ ((String(item[glOcalendar.table[0].indexOf('formula')]).length == 0) ?"": (".   Средняя нагрузка: " + ev(item[glOcalendar.table[0].indexOf('formula')])  + " " + (item[glOcalendar.table[0].indexOf('dimension')])))
 					+ ((String(item[glOcalendar.table[0].indexOf('popravka')]).length == 0) ?"": (".   Рекомендуемая нагрузка с учетом поправки: <span style='color: red; font-weight: bold'>" + ev(item[glOcalendar.table[0].indexOf('formula')] + item[glOcalendar.table[0].indexOf('popravka')]) + " " + (item[glOcalendar.table[0].indexOf('dimension')]) + "</span>"))
 					+ '   ' 
-					+ ev(item[glOcalendar.table[0].indexOf('period_description')])
-					, key);
+					+ ev(encrypt(item[glOcalendar.table[0].indexOf('period_description')], key))
+					//, key)
+					;
 
 				if (!!item[glOcalendar.table[0].indexOf('button_onclick')])  
 					if (item[glOcalendar.table[0].indexOf('button_onclick')].trim().length > 0)
@@ -341,8 +362,47 @@ var glOcalendar =
 		var div = document.createElement("div");
 		div.innerHTML =  glOcalendar.innerHTMLexpandedTreeAll();
 		document.getElementById("txt_2").appendChild(div);
-	}  
+	},  
 
+	//форма редактирования
+	showEditForm: function() {
+		//alert(1);
+		var key = this.cryptoKey;
+		var sHTML = "<ul>";
+		this.table
+			//сортрируем по id
+			.sort(function(a, b) {if (String(a[glOcalendar.table[0].indexOf('id')]) > String(b[glOcalendar.table[0].indexOf('id')])) return -1; else return 1; 
+					  ;})
+			.forEach(
+			function(item, i, arr) { 
+				sHTML += "\n\n\n\n";
+				item.forEach(
+					function(item1, i1, arr1) {
+						sHTML += item1 + "   ,   ";
+					}); 
+				/*
+				 // Добавляем HTML-контент с пом. свойства innerHTML
+				 sHTML += '<li style="' + item[glOcalendar.table[0].indexOf('style')] + '">'//visibility:inherited;font-size:'
+				 +//encrypt(
+				 //отступ для подуровней
+				 String(" ").padStart((item[glOcalendar.table[0].indexOf('level')] - 1) * 10, "..........")
+				 + encrypt(item[glOcalendar.table[0].indexOf('name')],key)
+				 + ((String(item[glOcalendar.table[0].indexOf('formula')]).length == 0) ?"": (".   Средняя нагрузка: " + ev(item[glOcalendar.table[0].indexOf('formula')])  + " " + (item[glOcalendar.table[0].indexOf('dimension')])))
+				 + ((String(item[glOcalendar.table[0].indexOf('popravka')]).length == 0) ?"": (".   Рекомендуемая нагрузка с учетом поправки: <span style='color: red; font-weight: bold'>" + ev(item[glOcalendar.table[0].indexOf('formula')] + item[glOcalendar.table[0].indexOf('popravka')]) + " " + (item[glOcalendar.table[0].indexOf('dimension')]) + "</span>"))
+				 + '   ' 
+				 + ev(encrypt(item[glOcalendar.table[0].indexOf('period_description')],key))
+				 //, key)
+				 ;
+
+				 if (!!item[glOcalendar.table[0].indexOf('button_onclick')])  
+				 if (item[glOcalendar.table[0].indexOf('button_onclick')].trim().length > 0)
+				 sHTML += '<button ' + ' onclick="' + item[glOcalendar.table[0].indexOf('button_onclick')] + '">Запустить</>';
+				 sHTML += '</li><p> ' + '</p><p> </p>';
+				 */
+			});
+		//sHTML += "</ul>";
+		alert(sHTML);
+	}
 
 };
 
@@ -363,7 +423,7 @@ function resizeAll() {
 function loadCurrentData() {
 
     //glOcalendar.cryptoKey = prompt("Введите ключ расшифровки", "");
-	
+
 	//проверки целостности б.д.
 	glOcalendar.check();
 
@@ -380,6 +440,7 @@ function loadCurrentData() {
 
 	buttonEdit  = document.createElement("div");
 	buttonEdit.innerHTML =  "<p><a href = 'https://github.com/RobinZGit/MacroRithmJS/blob/master/data.js'>Edit</button></p>";
+	//buttonEdit.innerHTML =  "<p><button onclick = 'glOcalendar.showEditForm()'>Edit</button></p>";
 	document.getElementById("txt_1").appendChild(buttonEdit);
 
 	//выводим список всех дел

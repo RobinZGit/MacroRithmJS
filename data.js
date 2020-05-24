@@ -49,6 +49,8 @@ var TABLE_aCalendar=[
 		,"функция вызова онлайн ритма, если нужно вывести в виде кнопки"
 		,"можно задать особый стиль, подставится в атрибут тэга элемента"
 	],
+	//зашифрована либо не зашифрована
+	["0","","","","","","scripted","scripted","scripted","","",""],
 	//===========================
 
 	//workout
@@ -64,14 +66,16 @@ var TABLE_aCalendar=[
 	//health and imp
 	[101,0,0,0,"switch (4){case 4: '17';case 6: '18';default: '19';}",""," часов дня","не есть до", "по средам","glOcalendar.currDate.getDay()==3","alert('100500')",""],
     [102,0,0,0,"Math.round(glOcalendar.rithmLinear(glOcalendar.toNum(glOcalendar.currDate,'date'),{x:20200101,y:12},{x:20211212,y:20}))"
-		,"+Math.round((glOcalendar.rithmSin(glOcalendar.toNum(glOcalendar.currDate,'date'),20200101,20200128,2,0,4)))"
+		 ,"+Math.round((glOcalendar.rithmSin(glOcalendar.toNum(glOcalendar.currDate,'date'),20200101,20200128,2,0,4)))"
 		,"раз(вдох и столько же выдох)","дых. в обед равномерно увелич по шагам","","true","",""],
 
 	//imp
 	[100001,0,0,0,"","","","6 мин из 60 стоп", "по выходным","true","",""],
 
 	//imp
-	[100002,0,0,0,"","","","придумать ритм переноса еды с вечера на пораньше", "по частоте","glOcalendar.rithmFrequency(glOcalendar.toNum(glOcalendar.currDate,'date'),{numerator:1,denominator:5})","","font-size:200%"],
+	[100002,0,0,0,"","","","придумать ритм переноса еды с вечера на пораньше", "","glOcalendar.rithmFrequency(glOcalendar.toNum(glOcalendar.currDate,'date'),{numerator:1,denominator:5})","","font-size:200%"],
+    [100003,0,0,0,"","","","придумать ритм без сахара", "","glOcalendar.rithmFrequency(glOcalendar.toNum(glOcalendar.currDate,'date'),{numerator:1,denominator:7})","","font-size:200%"],
+    [100004,0,0,0,"","","","придумать ритм физмат", "","glOcalendar.rithmFrequency(glOcalendar.toNum(glOcalendar.currDate,'date'),{numerator:1,denominator:8})","","font-size:200%"],
 
 	//тест 
 	/*
