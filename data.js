@@ -73,7 +73,7 @@ var TABLE_aCalendar=[
 	[100001,0,0,0,"","","","6 мин из 60 стоп", "по выходным","true","",""],
 
 	//imp
-	[100002,0,0,0,"","","","придумать ритм переноса еды с вечера на пораньше", "","glOcalendar.rithmFrequency(glOcalendar.toNum(glOcalendar.currDate,'date'),{numerator:1,denominator:5})","","font-size:200%"],
+	[100002,0,0,0,"","","","придумать ритм переноса еды с вечера на пораньше !время сна<<", "","glOcalendar.rithmFrequency(glOcalendar.toNum(glOcalendar.currDate,'date'),{numerator:1,denominator:5})","","font-size:200%"],
     [100003,0,0,0,"","","","придумать ритм без сахара - !запреты продуктов", "","glOcalendar.rithmFrequency(glOcalendar.toNum(glOcalendar.currDate,'date'),{numerator:1,denominator:7})","","font-size:200%"],
     [100004,0,0,0,"","","","придумать ритм физмат", "","glOcalendar.rithmFrequency(glOcalendar.toNum(glOcalendar.currDate,'date'),{numerator:1,denominator:8})","","font-size:200%"],
     [100005,0,0,0,"","","","придумать эволюцию Трз-ритма. Чтобы с удов.", "","glOcalendar.rithmFrequency(glOcalendar.toNum(glOcalendar.currDate,'date'),{numerator:1,denominator:9})","","font-size:200%"],
