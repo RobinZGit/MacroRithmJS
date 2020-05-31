@@ -1,21 +1,18 @@
 <html>
   <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <!-- Настройка viewport -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Подключаем Bootstrap CSS 
-    <link rel="stylesheet" href="css/bootstrap.min.css" > -->
 	<title>Calendar</title>
 
 <style>"font-size: 100%" 
 </style>
 
-	<!--база данных --> 
+	<!--база данных -->
 	<script src="https://robinzgit.github.io/MacroRithmJS/data.js"></script>
-	<!--
+	<!-- -->
+	<!-- --
 	<script src="data.js"></script>
-	-->
+	<!- -->
 
 
 	<!--функции шифрования -->
@@ -41,96 +38,7 @@ function decrypt(message, key) {
 
 
 <script>
-/*
- 1. сетка. массив лет/месяцев/недель/дней/часов... (размерность сетки) от начальной до конечной точки
- -выкидываем из массива часть точек (опр. периоды размерности сетки (пн-пт) и тп.)
- -если нужно выкидываем из остатка точки по ФУНКЦИИ ЧАСТОТЫ. Тогда нужна еще
- СУПЕРРАЗМЕРНОСТЬ. Напр размерность день суперразмерность неделя. Функция частоты от 0 до 1. 
- Считаем ее значение в начале каждого интервала суперразмерности
- кол во точек которые надо оставить в интервале равно этой частоте умножить на кол во точек в интервале
- эти точки раскидываем по интервалу равномерно начиная с заполненной точки и через равные промежутки
- -в результате остается массив действующих точек. По нему считаем выдавать сообщение или нет. 
- По нему же считаем ОБЪЕМ СЕТКИ = ОБЪЕМ ВРЕМЕНИ
-
- 2. Величина нагрузки. Размерность величины. Считанм по ФОРМУЛЕ-ПОСЛЕДОВАТЕЛЬНОСТИ НАГРУЗКИ 
- */
-
-
-
-//============================================================ 
-//============================================================ 
-//============================================================ 
-//============================================================ 
-/*
- var TABLE_aCalendar=[
- //===  значения колонок  ====
- ["id"
- ,"parentid"
- ,"globalsid"
- ,"level"
- ,"formula"
- ,"popravka"
- ,"dimension"
- ,"name"
- ,"period_description"
- ,"period_formula"
- ,"button_onclick"
- ,"style"
- ],
- //доступ по имени поля а не по индексу такой:  item[ Gl_aDeals[0].indexOf('name') ]
- //!!! нужно делать доступ по имени поля чтобы всегда можно было добавить поля
- ["id"
- ,"дело-родитель"
- ,"поле для правильной сортировки в дереве(не заполнять,рассчитается в процессе)"
- ,"уровень в дереве (не заполнять)"
- ,"формула нагрузки дела"
- ,"поправка к формуле. например формула - линейный ритм, а поправка - синусоидальный множитель или добавок "
- ,"размерность нагрузки"
- ,"наименование дела"
- ,"описание периодичности"
- ,"'функция выводить либо не выводить в тек. список'==''"
- ,"функция вызова онлайн ритма, если нужно вывести в виде кнопки"
- ,"можно задать особый стиль, подставится в атрибут тэга элемента"
- ],
- //===========================
-
- //workout
- [1,0,0,0,"","","","отжимания вниз головой","по понедельникам","glOcalendar.currDate.getDay()==1","",""],
- [2,0,0,0,"","","","подтягивания на одной руке", "по вторникам","glOcalendar.currDate.getDay()==2","",""],
- [3,0,0,0,"","","","флаг", "по четвергам","glOcalendar.currDate.getDay()==4","",""],
- [4,0,0,0,"","","","флаг", "по пятницам","glOcalendar.currDate.getDay()==5","",""],
- [5,0,0,0,"","","","спичаги с брусьев на количество", "по субботам","glOcalendar.currDate.getDay()==6","",""],
- [6,0,0,0,"","","","спичаги с рук на количество. ходьба на руках.", "по воскресеньям","(glOcalendar.currDate.getDay()==0)","","font-size:100%"],
- [7,0,0,0,"","","","5 и 5 минут дриблинг с бросками. легкий бег либо ролики либо степ","утро раб. дня на удаленке","(( [1,2,4,5].indexOf(glOcalendar.currDate.getDay())>=0))&&(glOcalendar.currDate.getHours()<11 )","",""],
- [8,0,0,0,"","","","5 и 5 минут дриблинг с бросками. степ с резиной","вечер раб. дня на удаленке","(( [1,2,4,5].indexOf(glOcalendar.currDate.getDay())>=0))&&(glOcalendar.currDate.getHours()>11 )","",""],
-
- //health and imp
- [101,0,0,0,"switch (4){case 4: '17';case 6: '18';default: '19';}",""," часов дня","не есть до", "по средам","glOcalendar.currDate.getDay()==3","alert('100500')",""],
- [102,0,0,0,"Math.round(glOcalendar.rithmLinear(glOcalendar.toNum(glOcalendar.currDate,'date'),{x:20200101,y:12},{x:20211212,y:20}))"
- ,"+Math.round((glOcalendar.rithmSin(glOcalendar.toNum(glOcalendar.currDate,'date'),20200101,20200128,2,0,4)))"
- ,"раз(вдох и столько же выдох)","дых. в обед равномерно увелич по шагам","","true","",""],
-
- //imp
- [100001,0,0,0,"","","","6 мин из 60 стоп", "по выходным","true","",""],
-
- //imp
- [100002,0,0,0,"","","","придумать ритм переноса еды с вечера на пораньше", "по частоте","glOcalendar.rithmFrequency(glOcalendar.toNum(glOcalendar.currDate,'date'),{numerator:1,denominator:5})","","font-size:200%"],
-
- //тест 
-
- // [1000200,2,0,0,"","","222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
- // [1000300,8,0,0,"","","888 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
- // [1000400,2,0,0,"","","222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
- // [1000500,1000200,0,0,"","","потомок 222 ТЕСТ + switch (4){case 4: '17';case 6: '18';default: '19';}", "всегда","","true","alert('100500')"],
-
-
- ];
- */
-//============================================================ 
-//============================================================ 
-//============================================================ 
-//============================================================ 
-
+//var TABLE_aCalendar= ... - перенесено в data.js
 
 
 //основной объект - бд и методы
@@ -145,27 +53,9 @@ var glOcalendar =
 	treeLen:1,    //высота дерева, расчитывается в calcSortFields
     zagolovokRows:3, //количество строк в бд для описания наименований, типов и пр
     //========================
-	/*
-	 //расшифровка/шифрование, если это требуется
-	 _encrypt:function (message1, fieldname) {
-	 var message = message1;
-	 if (this.cryptoKey.length > 0)
-	 message = CryptoJS.AES.encrypt(message1, this.cryptoKey);
-	 return message.toString();
-	 },
-	 _decrypt: function (message, fieldname) {
-	 if (this.cryptoKey.length > 0)
-	 {
-	 var code = CryptoJS.AES.decrypt(message, this.cryptoKey);
-	 var decryptedMessage = code.toString(CryptoJS.enc.Utf8);
-	 return decryptedMessage;
-	 }
-	 else return message;
-	 }
-	 ,
-	 */
+
 	//переводит дату в число до лет/месяцев/недель/дней/часов/минут/секунд
-	//yyyymmddhhmiss
+	//в формате  yyyymmddhhmiss
 	toNum: function(date, sMode) {
 		switch (sMode)
 		{
@@ -180,6 +70,19 @@ var glOcalendar =
 		}
 	},
 
+	//разность дат (в годах, месяцах,днях,часах,минутах,секундах
+    dateDiff: function(dBeg, dEnd, sFormat) {
+	    var remaining = dEnd - dBeg; // миллисекунды до даты
+	    switch (sFormat)
+		{
+			case "year": return remaining /= (1000 * 60 * 60 * 24 * 365);    
+			case "month": return remaining /= (1000 * 60 * 60 * 24 * 30);   
+			case "date": return remaining /= (1000 * 60 * 60 * 24);   
+			case "hours": return remaining /= (1000 * 60 * 60);   
+			case "minutes": return remaining /= (1000 * 60);    
+			case "seconds": return remaining /= 1000; 
+		}
+	},
 
 	//линейный ритм с начальным и конечным значениями {rBeg.x,rBeg.y} {rEnd.x,rEnd.y}
 	//возвращает значение в точке х. 
@@ -195,23 +98,60 @@ var glOcalendar =
 	},
 
 
-	//ритм по частоте появления: oFreq.numerator/oFreq.denominator
-	//    выстраивает блоки по oFreq.denominator точек и отмечает их 0 или 1
-	//    начинает с 1, потом идут oFreq.numerator/oFreq.denominator-1  нулей
-	//    точность дроби видит до тысячных
-	//возвращает значение 0 или 1 в точке n. 
-	rithmFrequency: function(n, oFreq) {
-		return ((n % oFreq.denominator) % Math.floor(oFreq.denominator / oFreq.numerator)) == 0;
-	},
-
-
 	//возвращает true с вероятностью probability, иначе false (испытание Бернулли)
 	//  пример вызова glOcalendar.bernulli(0.5)
 	bernulli: function(probability) {
 		return (probability >= Math.random());
 	},
 
-	check: function() { //проверка целостности бд
+
+	//ритм по частоте появления: oFreq.numerator/oFreq.denominator
+	//    выстраивает блоки по oFreq.denominator точек и отмечает их 0 или 1
+	//    начинает с 1, потом идут oFreq.numerator/oFreq.denominator-1  нулей
+	//    точность дроби видит до тысячных
+	//возвращает значение 0 или 1 в точке n. 
+	rithmFrequency: function(n, oFreq) {
+	    if (oFreq.numerator >= oFreq.denominator) return 1; 
+		else return ((n % oFreq.denominator) % Math.floor(oFreq.denominator / oFreq.numerator)) == 0;
+	},
+
+
+	//антисплайн - приближение дискретной последовательностью 0-1 произвольной последоваетельности func(n) (область значений 0-1, больше 1 обрежет до 1). 
+	//возвращает 0 или 1 - значение антисплайна в n
+	antiSpline: function(n, func) {
+		var fret = func(0) < 0.5 ? 0 : 1;
+		var fsum = fret;
+		var fsum0 = func(0);
+		for (var i=1; i < n;i++)
+		{
+			fsum0 += func(i);
+			fret = (fsum0 - fsum) < 0.5 ? 0 : 1;
+			fsum += fret;
+		}
+		return fret;
+	},
+
+	//строка из 0 и 1 для ритма  formula  на nDaysForward дней вперед - покажется либо не покажется дело ритма в соотв. день
+	getRithmStr: function(period_formula, nDaysForward, formula) {
+		var flSowFull = (formula.length > 0);
+		var sRet = "period_formula: '" + period_formula + "'\n\n"
+			+ "rithm for " + nDaysForward + " days forward:\n\n"
+			+ (flSowFull ? ("formula: " + formula + "'\n\n"): "");
+		//запомним тек дату объекта
+		var dCalendar = new Date(glOcalendar.currDate);
+		for (var i=0; i < nDaysForward; i++)
+		{
+			if (ev(period_formula) || (period_formula.length == 0))  
+				sRet += "1" + (flSowFull ? "   :   " + ev(formula) + "\n": ""); 
+			else sRet += "0";
+			glOcalendar.currDate.setDate(glOcalendar.currDate.getDate() + 1);
+		}
+		//вернем тек дату объекта
+		glOcalendar.currDate.setDate(dCalendar.getDate());
+		return sRet;
+	},
+    //проверка целостности бд
+	check: function() { 
         this.table.forEach(
 			function(item, i, arr) { 
 				if (i > 1)
@@ -279,7 +219,6 @@ var glOcalendar =
 			if (el > this.zagolovokRows - 1) //заголовочную часть массива не меняем!
 				if (this.table[el][this.table[0].indexOf('globalsid')].length < this.treeLen * this.blockLen)
 					this.table[el][this.table[0].indexOf('globalsid')] = String(this.table[el][this.table[0].indexOf('globalsid')]).padEnd(this.treeLen * this.blockLen, '9');
-//
 	},
 
 
@@ -321,6 +260,11 @@ var glOcalendar =
 					+ ev(encrypt(item[glOcalendar.table[0].indexOf('period_description')], key))
 					//, key)
 					;
+			    //просмотр ритма за неск дней		
+				/*не убирать кнопки, еще пригодятся
+				 sHTML += '<button ' + ' onclick=alert(glOcalendar.getRithmStr("'+item[glOcalendar.table[0].indexOf('period_formula')]+'",10,""))>Показать ритм</>';
+				 sHTML += '<button ' + ' onclick=alert(glOcalendar.getRithmStr("'+item[glOcalendar.table[0].indexOf('period_formula')]+'",10,"'+ item[glOcalendar.table[0].indexOf('formula')]+'"))>Показать ритм и нагрузку</>';
+				 */
 
 				if (!!item[glOcalendar.table[0].indexOf('button_onclick')])  
 					if (item[glOcalendar.table[0].indexOf('button_onclick')].trim().length > 0)
@@ -366,7 +310,6 @@ var glOcalendar =
 
 	//форма редактирования
 	showEditForm: function() {
-		//alert(1);
 		var key = this.cryptoKey;
 		var sHTML = "<ul>";
 		this.table
@@ -422,6 +365,7 @@ function resizeAll() {
 //основная функция. вывод списка текущих дел
 function loadCurrentData() {
 
+    //не убирать. будет нужно для шифрования
     //glOcalendar.cryptoKey = prompt("Введите ключ расшифровки", "");
 
 	//проверки целостности б.д.
@@ -435,7 +379,7 @@ function loadCurrentData() {
 
 
 	var buttonNext  = document.createElement("div");
-	buttonNext.innerHTML =  "<p><button onclick = '{glOcalendar.currDate.setDate(glOcalendar.currDate.getDate()+1);;glOcalendar.showExpandedTreeCurrent();}'>Next day</button></p>";
+	buttonNext.innerHTML =  "<p><button onclick = '{for(var i=0;i<10;i++){  glOcalendar.currDate.setDate(glOcalendar.currDate.getDate()+1);;glOcalendar.showExpandedTreeCurrent();  }}'>Next 10 days</button></p>";
 	document.getElementById("txt_1").appendChild(buttonNext);
 
 	buttonEdit  = document.createElement("div");
@@ -445,7 +389,6 @@ function loadCurrentData() {
 
 	//выводим список всех дел
 	glOcalendar.showExpandedTreeAll();
-//https://github.com/RobinZGit/MacroRithmJS/blob/master/index.html
 
 }  
 

@@ -77,6 +77,9 @@ var TABLE_aCalendar=[
     [100003,0,0,0,"","","","придумать ритм без сахара - !запреты продуктов", "","glOcalendar.rithmFrequency(glOcalendar.toNum(glOcalendar.currDate,'date'),{numerator:1,denominator:7})","","font-size:150%"],
     [100004,0,0,0,"","","","придумать ритм физмат", "","glOcalendar.rithmFrequency(glOcalendar.toNum(glOcalendar.currDate,'date'),{numerator:1,denominator:8})","","font-size:150%"],
     [100005,0,0,0,"","","","придумать эволюцию Трз-ритма. Чтобы с удов. ! -царь-ритм пусть гасит другие ритмы. вместо них он. гасить К(т) процентов ритмов. 10-15 лет. В ритме признак что нельзя гасить", "","glOcalendar.rithmFrequency(glOcalendar.toNum(glOcalendar.currDate,'date'),{numerator:1,denominator:9})","","font-size:150%"],
+    [100006,0,0,0,"","","","сух.я завтрак", "среда, пятница, все чаще, ритм на 2 года","((glOcalendar.currDate.getDay()==3)||(glOcalendar.currDate.getDay()==5))&&(glOcalendar.antiSpline(glOcalendar.dateDiff((new Date(2020,04,30)),glOcalendar.currDate,'date'), (function(v) {return (v/(2*365));}) )==1)","","font-size:150%"],
+    [100007,0,0,0,"","","","сух.я обед", "среда, пятница, все чаще, ритм на 4 года","((glOcalendar.currDate.getDay()==3)||(glOcalendar.currDate.getDay()==5))&&(glOcalendar.antiSpline(glOcalendar.dateDiff((new Date(2020,04,30)),glOcalendar.currDate,'date'), (function(v) {return (v/(4*365));}) )==1)","","font-size:150%"],
+    [100008,0,0,0,"","","","сух.я ужин", "среда, пятница, все чаще, ритм на 8 лет","((glOcalendar.currDate.getDay()==3)||(glOcalendar.currDate.getDay()==5))&&(glOcalendar.antiSpline(glOcalendar.dateDiff((new Date(2020,04,30)),glOcalendar.currDate,'date'), (function(v) {return (v/(8*365));}) )==1)","","font-size:150%"],
 
 	//тест 
 	/*
