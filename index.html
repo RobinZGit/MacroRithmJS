@@ -8,11 +8,10 @@
 </style>
 
 	<!--база данных -->
+	<!-- берем сначала из локального файла, а потом пытаемся переопределить из удаленного -->
+	<script src="data.js"> </script>
 	<script src="https://robinzgit.github.io/MacroRithmJS/data.js"></script>
 	<!-- -->
-	<!-- --
-	<script src="data.js"></script>
-	<!- -->
 
 
 	<!--функции шифрования -->
@@ -48,7 +47,7 @@ var glOcalendar =
 	currDate: new Date(),
 
 	//== служебные свойства ==
-	cryptoKey:"", //ключ расшифровки, ввенный при вхое
+	cryptoKey:"", //ключ расшифровки, ввенный при входе
 	blockLen:10,  //кол во цифр на блок одного ид.  ид дб строго меньше blockLen
 	treeLen:1,    //высота дерева, расчитывается в calcSortFields
     zagolovokRows:3, //количество строк в бд для описания наименований, типов и пр
@@ -284,7 +283,12 @@ var glOcalendar =
 	//выводим список текущих дел
 	showExpandedTreeCurrent: function() {
 		var label= document.createElement("label");
-		label.innerHTML =  "<p><label style = 'font-size:125%;color:red'>--------- " + glOcalendar.currDate.toLocaleString() + " --------------</label><p>";
+
+		var weekday= "";
+		//alert(glOcalendar.currDate.getDay());
+		weekday = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"][glOcalendar.currDate.getDay()];
+
+		label.innerHTML =  "<p><label style = 'font-size:125%;color:red'>--------- " + glOcalendar.currDate.toLocaleString() + ", " + weekday + " --------------</label><p>";
 		document.getElementById("txt_1").appendChild(label);
 
 		var div = document.createElement("div");
