@@ -50,7 +50,7 @@ var glOcalendar =
 //============================================================ 
 	table:[
 		//===  значения колонок  ====
-		["id"
+		[   "id"
 			,"parentid"
 			,"globalsid"
 			,"level"
@@ -65,7 +65,7 @@ var glOcalendar =
 		],
 		//доступ по имени поля а не по индексу такой:  item[ Gl_aDeals[0].indexOf('name') ]
 		//!!! нужно делать доступ по имени поля чтобы всегда можно было добавить поля
-		["id"
+		[   "id"
 			,"дело-родитель"
 			,"поле для правильной сортировки в дереве(не заполнять,рассчитается в процессе)"
 			,"уровень в дереве (не заполнять)"
@@ -83,13 +83,32 @@ var glOcalendar =
 		//===========================
 
 		[1,0,0,0,"","","","ФИЗИЧЕСКАЯ ТРЕНИРОВКА:","","1==1","","font-size:150%"],
-		[70,1,0,0,"","","","5 и 5 минут дриблинг с бросками. легкий бег либо ролики либо степ","утро раб. дня на удаленке","(( [1,2,4,5].indexOf(glOcalendar.currDate.getDay())>=0))&&(glOcalendar.currDate.getHours()<11 )","",""],
-		[80,1,0,0,"","","","5 и 5 минут дриблинг с бросками. степ с резиной","вечер раб. дня на удаленке","(( [1,2,4,5].indexOf(glOcalendar.currDate.getDay())>=0))&&(glOcalendar.currDate.getHours()>11 )","",""],
+		//[70,1,0,0,"","","","5 и 5 минут дриблинг с бросками. легкий бег либо ролики либо степ","утро раб. дня на удаленке","(( [1,2,4,5].indexOf(glOcalendar.currDate.getDay())>=0))&&(glOcalendar.currDate.getHours()<11 )","",""],
+		//[80,1,0,0,"","","","5 и 5 минут дриблинг с бросками. степ с резиной","вечер раб. дня на удаленке","(( [1,2,4,5].indexOf(glOcalendar.currDate.getDay())>=0))&&(glOcalendar.currDate.getHours()>11 )","",""],
+		
+		
+		//Царь!
+		[100001,0,0,0,"","","","ЦАРЬ: 6 мин из 60 стоп (7 мин из 99 по раб. дням)", "","true","","font-size:190%"],
+
+		//дыхательные
 		[90,1,0,0,"Math.round(glOcalendar.rithmLinear(glOcalendar.toNum(glOcalendar.currDate,'date'),{x:20200101,y:12},{x:20211212,y:20}))"
 			,"+Math.round((glOcalendar.rithmSin(glOcalendar.toNum(glOcalendar.currDate,'date'),20200101,20200128,2,0,4)))"
 			,"раз(вдох и столько же выдох)","дых. в обед равномерно увелич по шагам","","true","",""],
-		[5,1,0,0,"","","","профилактика плоскостоп - 1)подъем на полступни, 2)сведение разведение стоп с трением","","1==1","",""],
+		
+	    //бег/приседания		
+		[95,1,0,0,"Math.round(glOcalendar.rithmLinear(glOcalendar.toNum(glOcalendar.currDate,'date'),{x:20200901,y:1},{x:20250901,y:120}))"
+			,"*(1/2)*Math.round((glOcalendar.rithmSin(glOcalendar.toNum(glOcalendar.currDate,'date'),20200101,20200128,1,1,1)))"
+			,"мин","бег","","(glOcalendar.currDate.getDay()==1)&&( (glOcalendar.getWeekNumLocal(glOcalendar.currDate)%2 ) ==0 )","",""],
+        [96,1,0,0,"Math.round(glOcalendar.rithmLinear(glOcalendar.toNum(glOcalendar.currDate,'date'),{x:20200901,y:1},{x:20250901,y:120}))"
+			,"*(1/2)*Math.round((glOcalendar.rithmSin(glOcalendar.toNum(glOcalendar.currDate,'date'),20200101,20200128,1,1,1)))"
+			,"кг","присед 10 раз","","(glOcalendar.currDate.getDay()==1)&&( (glOcalendar.getWeekNumLocal(glOcalendar.currDate)%2 ) !=0 )","",""],
+        
+	    //профилактика и лечение		
+	    [5,1,0,0,"","","","профилактика плоскостоп - 1)подъем на полступни, 2)сведение разведение стоп с трением","","1==1","",""],
 		[6,1,0,0,"","","","ШЕЯ, ПОЗВОНОЧНИК","","1==1","",""],
+	    //периодическое голодание
+		[101,0,0,0,"switch (4){case 4: '17';case 6: '18';default: '19';}",""," часов дня","не есть до", "по средам","glOcalendar.currDate.getDay()==3","alert('100500')",""],
+
 		//workout
 		[2,1,0,0,"","","","WORKOUT (доступное движение):","","1==1","","font-size:150%"],
 	    [10,2,0,0,"","","","отжимания вниз головой","по понедельникам","glOcalendar.currDate.getDay()==1","",""],
@@ -99,17 +118,15 @@ var glOcalendar =
 	    [50,2,0,0,"","","","спичаги с брусьев на количество", "по субботам","glOcalendar.currDate.getDay()==6","",""],
 	    [60,2,0,0,"","","","спичаги с рук на количество. ходьба на руках.", "по воскресеньям","(glOcalendar.currDate.getDay()==0)","","font-size:100%"],
 
-		//health and imp
-		[101,0,0,0,"switch (4){case 4: '17';case 6: '18';default: '19';}",""," часов дня","не есть до", "по средам","glOcalendar.currDate.getDay()==3","alert('100500')",""],
+	
 
 		//imp
-		[100001,0,0,0,"","","","ЦАРЬ: 6 мин из 60 стоп (7 мин из 99 по раб. дням)", "по выходным","true","","font-size:190%"],
-
-		//imp
-		[100002,0,0,0,"","","","придумать ритм переноса еды с вечера на пораньше !время сна<<", "","glOcalendar.rithmFrequency(glOcalendar.toNum(glOcalendar.currDate,'date'),{numerator:1,denominator:5})","","font-size:150%"],
-		[100003,0,0,0,"","","","придумать ритм без сахара - !запреты продуктов", "","glOcalendar.rithmFrequency(glOcalendar.toNum(glOcalendar.currDate,'date'),{numerator:1,denominator:7})","","font-size:150%"],
-		[100004,0,0,0,"","","","придумать ритм физмат", "","glOcalendar.rithmFrequency(glOcalendar.toNum(glOcalendar.currDate,'date'),{numerator:1,denominator:8})","","font-size:150%"],
-		[100005,0,0,0,"","","","придумать эволюцию Трз-ритма. Чтобы с удов. ! -царь-ритм пусть гасит другие ритмы. вместо них он. гасить К(т) процентов ритмов. 10-15 лет. В ритме признак что нельзя гасить", "","glOcalendar.rithmFrequency(glOcalendar.toNum(glOcalendar.currDate,'date'),{numerator:1,denominator:9})","","font-size:150%"],
+		//[100002,0,0,0,"","","","придумать ритм переноса еды с вечера на пораньше !время сна<<", "","glOcalendar.rithmFrequency(glOcalendar.toNum(glOcalendar.currDate,'date'),{numerator:1,denominator:5})","","font-size:150%"],
+		//[100003,0,0,0,"","","","придумать ритм без сахара - !запреты продуктов", "","glOcalendar.rithmFrequency(glOcalendar.toNum(glOcalendar.currDate,'date'),{numerator:1,denominator:7})","","font-size:150%"],
+		//[100004,0,0,0,"","","","придумать ритм физмат", "","glOcalendar.rithmFrequency(glOcalendar.toNum(glOcalendar.currDate,'date'),{numerator:1,denominator:8})","","font-size:150%"],
+		//[100005,0,0,0,"","","","придумать эволюцию Трз-ритма. Чтобы с удов. ! -царь-ритм пусть гасит другие ритмы. вместо них он. гасить К(т) процентов ритмов. 10-15 лет. В ритме признак что нельзя гасить", "","glOcalendar.rithmFrequency(glOcalendar.toNum(glOcalendar.currDate,'date'),{numerator:1,denominator:9})","","font-size:150%"],
+		
+		//
 		[100006,0,0,0,"","","","сух.я завтрак", "среда, пятница, все чаще, ритм на 2 года","((glOcalendar.currDate.getDay()==3)||(glOcalendar.currDate.getDay()==5))&&(glOcalendar.antiSpline(glOcalendar.dateDiff((new Date(2020,04,30)),glOcalendar.currDate,'date'), (function(v) {return (v/(2*365));}) )==1)","","font-size:150%"],
 		[100007,0,0,0,"","","","сух.я обед", "среда, пятница, все чаще, ритм на 4 года","((glOcalendar.currDate.getDay()==3)||(glOcalendar.currDate.getDay()==5))&&(glOcalendar.antiSpline(glOcalendar.dateDiff((new Date(2020,04,30)),glOcalendar.currDate,'date'), (function(v) {return (v/(4*365));}) )==1)","","font-size:150%"],
 		[100008,0,0,0,"","","","сух.я ужин", "среда, пятница, все чаще, ритм на 8 лет","((glOcalendar.currDate.getDay()==3)||(glOcalendar.currDate.getDay()==5))&&(glOcalendar.antiSpline(glOcalendar.dateDiff((new Date(2020,04,30)),glOcalendar.currDate,'date'), (function(v) {return (v/(8*365));}) )==1)","","font-size:150%"],
@@ -233,6 +250,12 @@ var glOcalendar =
 		glOcalendar.currDate.setDate(dCalendar.getDate());
 		return sRet;
 	},
+	
+	//номер недели для дня d
+	getWeekNumLocal: function(d){
+	  return Math.floor(d.getDate() / 7);
+	},
+	
     //проверка целостности бд
 	check: function() { 
         this.table.forEach(
@@ -516,6 +539,7 @@ function loadCurrentData() {
     //не убирать. будет нужно для шифрования
     //glOcalendar.cryptoKey = prompt("Введите ключ расшифровки", "");
 
+//alert(glOcalendar.getWeekNum(glOcalendar.currDate.setDate( glOcalendar.currDate.getDate() +7).getDate()));
 	//проверки целостности б.д.
 	glOcalendar.check();
 
