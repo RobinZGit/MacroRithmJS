@@ -499,10 +499,13 @@ var glOcalendar =
 			});
 		//sHTML += "</ul>";
 		//return sHTML;
+		
 		try{
 		  var utterance1 = new SpeechSynthesisUtterance(sHTML);
 		  window.speechSynthesis.speak(utterance1);
-        }catch(e ) {alert(sHTML);};
+        }catch(e ) {
+		  alert(sHTML);
+		};
 	
 	},
 	
@@ -623,7 +626,7 @@ function loadCurrentData() {
 	document.getElementById("txt_1").appendChild(buttonEdit);
     
 	var buttonSay  = document.createElement("div");
-	buttonSay.innerHTML =  "<p><button onclick = '{glOcalendar.sayExpandedTreeCurrent(0s1)}'>Say day</button></p>";
+	buttonSay.innerHTML =  "<p><button onclick = '{glOcalendar.sayExpandedTreeCurrent(1)}'>Say day</button></p>";
 	document.getElementById("txt_1").appendChild(buttonSay);
 
 	//выводим список всех дел
