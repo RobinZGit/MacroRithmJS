@@ -152,7 +152,7 @@ var glOcalendar =
 	currDate: new Date(),
 
 	//== служебные свойства ==
-	cryptoKey:"", //ключ расшифровки, ввенный при входе
+	cryptoKey:"", //ключ расшифровки, введенный при входе
 	blockLen:10,  //кол во цифр на блок одного ид.  ид дб строго меньше blockLen
 	treeLen:1,    //высота дерева, расчитывается в calcSortFields
     zagolovokRows:3, //количество строк в бд для описания наименований, типов и пр
@@ -446,6 +446,66 @@ var glOcalendar =
 		return sHTML;
 	},
 
+	//проговаривает голосом список дел
+	//  nMode = 0 - все дела
+	//  nMode = 1 - теkущие на this.currDate дела
+	sayExpandedTreeCurrent: function(nMode) { 
+        var key = this.cryptoKey;
+		var sHTML = "";
+		this.table
+			//оставляем только необходимые на дату вывода дела
+			.filter(function(item, i, arr) { 
+						switch (nMode)
+						{
+							case 0:
+								return (i > (glOcalendar.zagolovokRows - 1));
+							case 1:
+								try
+								{ 
+									return eval(item[arr[0].indexOf('period_formula')]) > 0;
+								} catch (e) {return false;}
+						}
+					}
+					)
+			//сортрируем по globalsid, чтобы вывести полностью раскрытый список-дерево
+			.sort(function(a, b) {if (String(a[glOcalendar.table[0].indexOf('globalsid')]) > String(b[glOcalendar.table[0].indexOf('globalsid')])) return -1; else return 1; 
+					  ;})
+			.forEach(
+			function(item, i, arr) { 
+
+				// Добавляем HTML-контент с пом. свойства innerHTML
+				sHTML += //'<li style="' + item[glOcalendar.table[0].indexOf('style')] + '  " >'//visibility:inherited;font-size:'
+					//+//encrypt(
+					////отступ для подуровней
+					//String(" ").padStart((item[glOcalendar.table[0].indexOf('level')] - 1) * 10, "..........")
+					//+ 
+					encrypt(item[glOcalendar.table[0].indexOf('name')], key)+". далее. "
+					//+ ((String(item[glOcalendar.table[0].indexOf('formula')]).length == 0) ?"": (".   Средняя нагрузка: " + ev(item[glOcalendar.table[0].indexOf('formula')])  + " " + (item[glOcalendar.table[0].indexOf('dimension')])))
+					//+ ((String(item[glOcalendar.table[0].indexOf('popravka')]).length == 0) ?"": (".   Рекомендуемая нагрузка с учетом поправки: " + ev(item[glOcalendar.table[0].indexOf('formula')] + item[glOcalendar.table[0].indexOf('popravka')]) + " " + (item[glOcalendar.table[0].indexOf('dimension')]) + ""))
+					//+ '   ' 
+					//+ ev(encrypt(item[glOcalendar.table[0].indexOf('period_description')], key))
+					//, key)
+					;
+			    //просмотр ритма за неск дней		
+				/*не убирать кнопки, еще пригодятся
+ sHTML += '<button ' + ' onclick=alert(glOcalendar.getRithmStr("'+item[glOcalendar.table[0].indexOf('period_formula')]+'",10,""))>Показать ритм</>';
+ sHTML += '<button ' + ' onclick=alert(glOcalendar.getRithmStr("'+item[glOcalendar.table[0].indexOf('period_formula')]+'",10,"'+ item[glOcalendar.table[0].indexOf('formula')]+'"))>Показать ритм и нагрузку</>';
+ */
+
+				//if (!!item[glOcalendar.table[0].indexOf('button_onclick')])  
+				//	if (item[glOcalendar.table[0].indexOf('button_onclick')].trim().length > 0)
+				//		sHTML += '<button ' + ' onclick="' + item[glOcalendar.table[0].indexOf('button_onclick')] + '">Запустить</>';
+				//sHTML += '</li><p> ' + '</p><p> </p>';
+			});
+		//sHTML += "</ul>";
+		//return sHTML;
+		try{
+		  var utterance1 = new SpeechSynthesisUtterance(sHTML);
+		  window.speechSynthesis.speak(utterance1);
+        }catch(e ) {alert(sHTML);};
+	
+	},
+	
     //список текущих дел
 	innerHTMLexpandedTreeCurrent: function() {
 		return this.innerHTMLexpandedTreeTable(1);
@@ -558,10 +618,13 @@ function loadCurrentData() {
 	buttonNext.innerHTML =  "<p><button onclick = '{for(var i=0;i<10;i++){  glOcalendar.currDate.setDate(glOcalendar.currDate.getDate()+1);;glOcalendar.showExpandedTreeCurrent();  }}'>Next 10 days</button></p>";
 	document.getElementById("txt_1").appendChild(buttonNext);
 
-	buttonEdit  = document.createElement("div");
+	var buttonEdit  = document.createElement("div");
 	buttonEdit.innerHTML =  "<p><a href = 'https://github.com/RobinZGit/MacroRithmJS/blob/master/data.js'>Edit</button></p>";
-	//buttonEdit.innerHTML =  "<p><button onclick = 'glOcalendar.showEditForm()'>Edit</button></p>";
 	document.getElementById("txt_1").appendChild(buttonEdit);
+    
+	var buttonSay  = document.createElement("div");
+	buttonSay.innerHTML =  "<p><button onclick = '{glOcalendar.sayExpandedTreeCurrent(0)}'>Say day</button></p>";
+	document.getElementById("txt_1").appendChild(buttonSay);
 
 	//выводим список всех дел
 	glOcalendar.showExpandedTreeAll();
